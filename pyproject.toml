@@ -1,0 +1,34 @@
+[project]
+name = "intelligent-data-processor"
+version = "0.1.0"
+description = "Intelligent system for processing unstructured data"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "python-multipart",
+    "sqlalchemy",
+    "asyncpg",
+    "celery",
+    "redis",
+    "spacy>=3.7.0",
+    "torch>=2.1.0",
+    "transformers",
+    "pydantic",
+    "pydantic-settings",
+    "python-dotenv",
+    "loguru",
+    "pytest",
+    "black",
+    "isort",
+    "openai>=1.93.0",
+    "jinja2>=3.1.6",
+    "numpy<2.0.0",
+    "pip>=25.1.1",
+    "greenlet>=1.1.0",
+    "PyPDF2>=3.0.0",
+    "pdfplumber>=0.9.0",
+    "pytesseract>=0.3.10",
+    "opencv-python>=4.8.0",
+    "pillow>=10.0.0",
+]

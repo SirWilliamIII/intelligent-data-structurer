@@ -1,0 +1,31 @@
+# Core web framework
+fastapi
+uvicorn
+python-multipart
+jinja2
+aiofiles
+
+# Database
+sqlalchemy
+asyncpg
+
+# Background jobs
+celery
+redis
+
+# Basic AI (without heavy dependencies)
+spacy>=3.7.0
+
+# OpenAI Integration
+openai>=1.0.0
+
+# Utilities
+pydantic
+pydantic-settings
+python-dotenv
+loguru
+
+# Development
+pytest
+black
+isort
