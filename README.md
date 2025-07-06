@@ -1,263 +1,219 @@
-# Intelligent Data Processor
+# 🧠 Intelligent Data Processor
 
-An advanced system that intelligently processes unstructured data (text, markdown, images) and automatically creates structured database tables based on content classification.
+**Transform unstructured data into organized, searchable MongoDB collections automatically using AI-powered classification.**
 
-## Features
+![Python](https://img.shields.io/badge/python-v3.11+-blue.svg)
+![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi)
+![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=flat&logo=mongodb&logoColor=white)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
 
-🧠 **Intelligent Classification** - Automatically detects content types:
-- Contact Information & Business Cards
-- Product Data & Invoices  
-- Event Information & Meeting Notes
-- Articles & Blog Posts
-- Recipes with Ingredients
-- Financial Transactions
-- Log Entries & System Data
-- Employee & HR Data
-- Email Threads
+## ✨ Features
 
-🗄️ **Dynamic Schema Creation** - Creates appropriate database tables:
-- `contacts` - Names, emails, phones, addresses
-- `products` - SKUs, prices, inventory
-- `events` - Dates, times, locations
-- `articles` - Titles, authors, content
-- `recipes` + `ingredients` + `instructions`
-- `transactions` - Financial data
-- `logs` - System monitoring
-- `employees` - HR information
+- 🤖 **AI-Powered Classification** - Advanced NLP using spaCy for intelligent content analysis
+- 🗂️ **Dynamic Collections** - Automatically creates MongoDB collections based on content patterns
+- 📊 **Confidence Scoring** - Quality assurance with visual confidence indicators
+- 🔄 **Learning System** - Improves classification accuracy over time through similarity matching
+- 🌐 **Modern Web UI** - Beautiful drag-and-drop interface built with Alpine.js and Tailwind CSS
+- 📁 **Multi-Format Support** - Process text, markdown, PDFs, images, and more
+- 🎯 **Schema Evolution** - Intelligent database schema suggestions based on content patterns
 
-⚡ **Background Processing** - Asynchronous job queue with progress tracking
-
-🔍 **Confidence Scoring** - Smart confidence-based workflow:
-- Auto-process high confidence (>0.8)
-- Queue medium confidence for review (0.4-0.8)  
-- Flag low confidence for manual classification (<0.4)
-
-🖼️ **Image Processing** - OCR support for extracting text from images
-
-## Quick Start
+## 🚀 Quick Start
 
 ### Prerequisites
 
 - Python 3.11+
-- PostgreSQL
-- Redis
-- Tesseract OCR (optional, for image processing)
+- MongoDB running on localhost:27017
+- [uv](https://github.com/astral-sh/uv) package manager
 
 ### Installation
 
-1. **Clone and setup:**
+1. **Clone the repository**
 ```bash
-cd ~/Programming
-git clone <repository> intelligent-data-processor
+git clone https://github.com/your-username/intelligent-data-processor.git
 cd intelligent-data-processor
-python setup.py
 ```
 
-2. **Activate environment:**
+2. **Install dependencies**
 ```bash
-source venv/bin/activate
+uv sync
 ```
 
-3. **Configure settings:**
+3. **Download spaCy language model**
 ```bash
-cp .env.example .env
-# Edit .env with your database and Redis settings
+uv run python -m spacy download en_core_web_sm
 ```
 
-4. **Run the application:**
+4. **Start MongoDB** (if not already running)
 ```bash
-python main.py
+brew services start mongodb/brew/mongodb-community
+# or
+mongod
 ```
 
-5. **Visit:** `http://localhost:8000`
-
-### Manual Setup
-
-If automatic setup fails:
-
+5. **Run the application**
 ```bash
-# Create virtual environment
-python3 -m venv venv
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Download spaCy model
-python -m spacy download en_core_web_sm
-
-# Setup database
-createdb intelligent_data
-
-# Start services
-brew services start postgresql  # macOS
-brew services start redis       # macOS
+uv run python main.py
 ```
 
-## Usage
+6. **Open your browser**
+Navigate to `http://localhost:8000`
 
-### Upload Files
+## 🎯 How It Works
 
-1. Go to `http://localhost:8000`
-2. Upload text files, markdown, or images
-3. System automatically:
-   - Classifies content type
-   - Extracts structured data
-   - Creates appropriate database tables
-   - Stores data with confidence scores
+### 1. **Upload Files**
+Drag and drop or select files through the web interface. Supports:
+- Text files (.txt, .md, .log)
+- Documents (.pdf, .docx)
+- Images (.png, .jpg) with OCR
+- Structured data (.csv, .json)
 
-### Monitor Processing
+### 2. **AI Analysis**
+The system analyzes content using multiple strategies:
+- **Semantic Signature Analysis** - Extracts domain keywords and structural patterns
+- **NLP Entity Recognition** - Identifies people, organizations, technologies
+- **Similarity Matching** - Compares against previously processed content
+- **Confidence Scoring** - Provides quality metrics for each classification
 
-- **High confidence** → Auto-processed immediately
-- **Medium confidence** → Queued for review
-- **Low confidence** → Manual classification needed
+### 3. **Dynamic Collection Creation**
+Based on analysis, creates MongoDB collections with meaningful names:
+- `kubernetes_resources` - For Kubernetes documentation
+- `spanish_language` - For Spanish learning materials
+- `football_sports` - For sports-related content
+- `cooking_recipes` - For recipe content
+- And many more, generated dynamically!
 
-### Query Data
+### 4. **Intelligent Storage**
+Documents are stored with rich metadata including:
+- Original content and cleaned version
+- Extracted entities and keywords
+- Classification confidence and reasoning
+- Semantic fingerprint for future similarity matching
 
-```bash
-# View all tables created
-python -c "from core.database import list_tables; print(list_tables())"
-
-# Query specific data
-psql intelligent_data -c "SELECT * FROM contacts;"
-psql intelligent_data -c "SELECT * FROM products;"
-```
-
-## Architecture
-
-```
-Upload → Classifier → Confidence Score → Background Job → Extractor → Validator → Database
-```
-
-### Content Types Supported
-
-| Type | Auto-Creates | Fields |
-|------|-------------|--------|
-| Contacts | `contacts` | name, email, phone, address, company |
-| Products | `products` | name, sku, price, category, inventory |
-| Events | `events` | title, date, time, location, organizer |
-| Articles | `articles` | title, author, content, tags |
-| Recipes | `recipes`, `ingredients`, `instructions` | Relational recipe data |
-| Financial | `transactions` | date, amount, account, type |
-| Logs | `logs` | timestamp, level, service, message |
-| Employees | `employees` | id, name, department, salary |
-
-## Configuration
-
-Key settings in `.env`:
-
-```bash
-# Database
-DATABASE_URL=postgresql+asyncpg://postgres:password@localhost:5432/intelligent_data
-
-# Redis (for background jobs)
-REDIS_URL=redis://localhost:6379/0
-
-# AI/ML
-CONFIDENCE_THRESHOLD=0.7
-SPACY_MODEL=en_core_web_sm
-
-# File Processing
-MAX_FILE_SIZE=50MB
-UPLOAD_DIR=./uploads
-```
-
-## Development
-
-### Project Structure
+## 🏗️ Architecture
 
 ```
 intelligent-data-processor/
-├── app/              # FastAPI application
-├── core/             # Core processing logic
-│   ├── classifier.py # Content classification
-│   ├── extractors.py # Data extraction
-│   ├── database.py   # Database management
-│   └── jobs.py       # Background jobs
-├── api/              # API endpoints
-├── templates/        # Web interface
-├── tests/            # Test cases
-└── uploads/          # File storage
+├── core/
+│   ├── intelligent_analyzer.py    # Main AI analysis engine
+│   ├── classifier.py             # Content classification logic
+│   ├── mongo_database.py         # MongoDB management
+│   ├── database.py              # Database abstraction layer
+│   ├── document_processor.py    # File processing utilities
+│   └── config.py               # Configuration management
+├── templates/
+│   └── index.html              # Web interface
+├── main.py                     # FastAPI application
+└── pyproject.toml             # Dependencies and metadata
 ```
 
-### Running Tests
+## 🔧 Configuration
 
+Create a `.env` file for custom configuration:
+
+```env
+# MongoDB Settings
+MONGO_URL=mongodb://localhost:27017
+DATABASE_NAME=intelligent_data
+
+# AI Settings
+CONFIDENCE_THRESHOLD=0.7
+SPACY_MODEL=en_core_web_sm
+
+# Application Settings
+DEBUG=true
+LOG_LEVEL=INFO
+```
+
+## 📊 Example Classifications
+
+The system intelligently categorizes content:
+
+| File Type | Example | Collection | Confidence |
+|-----------|---------|------------|------------|
+| Kubernetes Docs | `kubectl-cheatsheet.md` | `kubernetes_resources` | 95% |
+| Sports List | `sports.txt` | `football_sports` | 80% |
+| Recipe | `chocolate-cake.md` | `cooking_recipes` | 88% |
+| Technical Ref | `linux-commands.txt` | `linux_technical` | 92% |
+
+## 🛠️ API Endpoints
+
+### Classification Only
 ```bash
-pytest tests/
+curl -X POST -F "file=@document.txt" http://localhost:8000/classify
+```
+
+### Process and Store
+```bash
+curl -X POST -F "file=@document.txt" http://localhost:8000/process
+```
+
+### Health Check
+```bash
+curl http://localhost:8000/health
+```
+
+### List Collections
+```bash
+curl http://localhost:8000/database/tables
+```
+
+## 🧪 Development
+
+### Running Tests
+```bash
+uv run pytest
 ```
 
 ### Code Formatting
-
 ```bash
-black .
-isort .
+uv run black .
+uv run isort .
 ```
 
-## Examples
-
-### Contact Information
-```
-John Smith
-CEO, Tech Corp
-john@techcorp.com
-(555) 123-4567
-123 Main St, Seattle, WA
-```
-→ Creates record in `contacts` table
-
-### Product Data
-```
-Product: Wireless Headphones
-SKU: WH-1000XM5
-Price: $299.99
-Category: Electronics
-In Stock: 45 units
-```
-→ Creates record in `products` table
-
-### Recipe
-```
-# Chocolate Chip Cookies
-
-Ingredients:
-- 2 cups flour
-- 1 cup butter
-- 1/2 cup sugar
-
-Instructions:
-1. Preheat oven to 350°F
-2. Mix ingredients
-3. Bake for 12 minutes
-```
-→ Creates records in `recipes`, `ingredients`, and `instructions` tables
-
-## Troubleshooting
-
-### Database Connection Issues
+### Test Classification
 ```bash
-# Check PostgreSQL is running
-pg_isready -h localhost -p 5432
-
-# Recreate database
-dropdb intelligent_data
-createdb intelligent_data
+uv run python test_classification.py
 ```
 
-### Redis Connection Issues
-```bash
-# Check Redis is running
-redis-cli ping
+## 🤝 Contributing
 
-# Start Redis
-brew services start redis  # macOS
-```
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-### spaCy Model Issues
-```bash
-# Download model manually
-python -m spacy download en_core_web_sm
-```
+## 📚 Dependencies
 
-## License
+- **FastAPI** - Modern web framework for the API
+- **MongoDB/Motor** - Database and async driver
+- **spaCy** - Natural language processing
+- **Loguru** - Structured logging
+- **Pydantic** - Data validation
+- **Alpine.js** - Reactive web components
+- **Tailwind CSS** - Utility-first styling
 
-MIT License
+## 🔮 Future Enhancements
+
+- [ ] Support for more file formats (Excel, PowerPoint)
+- [ ] Advanced similarity search with vector embeddings
+- [ ] Real-time collaboration features
+- [ ] Export capabilities (JSON, CSV)
+- [ ] Custom classification rules
+- [ ] Integration with cloud storage (S3, Google Drive)
+- [ ] REST API for programmatic access
+- [ ] Batch processing capabilities
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Built with modern Python tools: [uv](https://github.com/astral-sh/uv), FastAPI, and MongoDB
+- Powered by [spaCy](https://spacy.io/) for natural language processing
+- UI inspired by modern design principles with Tailwind CSS
+
+---
+
+**Transform your unstructured data into organized knowledge with AI! 🚀**
