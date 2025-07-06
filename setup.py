@@ -37,27 +37,18 @@ def setup_python_environment():
     print("✓ Python environment setup complete")
     return True
 
-def setup_database():
-    """Set up local PostgreSQL database."""
-    print("Setting up PostgreSQL database...")
+def setup_mongodb():
+    """Set up MongoDB database."""
+    print("Setting up MongoDB...")
     
-    # Check if PostgreSQL is running
-    if not run_command("pg_isready -h localhost -p 5432", check=False):
-        print("PostgreSQL is not running. Please start PostgreSQL and try again.")
-        print("On macOS: brew services start postgresql")
-        print("On Ubuntu: sudo systemctl start postgresql")
+    # Check if MongoDB is running
+    if not run_command("mongosh --eval 'db.runCommand(\"ping\").ok' --quiet", check=False):
+        print("MongoDB is not running. Please start MongoDB and try again.")
+        print("On macOS: brew services start mongodb-community")
+        print("On Ubuntu: sudo systemctl start mongod")
         return False
     
-    # Create database
-    db_commands = [
-        "createdb intelligent_data || true",  # Create database (ignore if exists)
-    ]
-    
-    for cmd in db_commands:
-        if not run_command(cmd, check=False):
-            print(f"Warning: Command failed: {cmd}")
-    
-    print("✓ Database setup complete")
+    print("✓ MongoDB setup complete")
     return True
 
 def setup_redis():
@@ -114,7 +105,7 @@ def main():
     
     # Setup steps
     success &= setup_python_environment()
-    success &= setup_database()
+    success &= setup_mongodb()
     success &= setup_redis()
     success &= download_spacy_model()
     

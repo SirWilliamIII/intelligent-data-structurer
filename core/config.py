@@ -12,10 +12,10 @@ from pydantic import Field
 class Settings(BaseSettings):
     """Application settings."""
     
-    # Database
-    database_url: str = Field(
-        default="postgresql+asyncpg://will@localhost:5432/intelligent_data",
-        env="DATABASE_URL"
+    # MongoDB
+    mongo_url: str = Field(
+        default="mongodb://localhost:27017",
+        env="MONGO_URL"
     )
     
     # Redis

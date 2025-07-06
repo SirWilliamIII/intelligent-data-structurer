@@ -14,6 +14,7 @@ from loguru import logger
 from collections import Counter, defaultdict
 import sqlite3
 from pathlib import Path
+from .classifier import IntelligentClassifier, ContentType
 
 @dataclass
 class ContentSignature:
@@ -103,32 +104,41 @@ class ContentLearningSystem:
         conn.close()
     
     def analyze_content_signature(self, content: str, entities: List[Dict]) -> ContentSignature:
-        """Create a semantic signature for content similarity matching."""
+        """Create a semantic signature for content similarity matching using dynamic learning."""
         
-        # Extract domain keywords (meaningful nouns, verbs, technical terms)
+        # Extract meaningful words (nouns, verbs, adjectives) dynamically
         domain_keywords = set()
         content_lower = content.lower()
         
-        # Technical domain indicators
-        tech_patterns = ['command', 'server', 'api', 'database', 'config', 'install', 'error']
-        sports_patterns = ['team', 'game', 'match', 'player', 'score', 'season', 'league']
-        cooking_patterns = ['recipe', 'ingredient', 'cook', 'bake', 'serve', 'tablespoon', 'cup']
+        # Extract significant terms dynamically from content
+        words = re.findall(r'\b[a-zA-Z]{3,}\b', content_lower)
+        word_freq = Counter(words)
         
-        for pattern in tech_patterns + sports_patterns + cooking_patterns:
-            if pattern in content_lower:
-                domain_keywords.add(pattern)
+        # Get top meaningful words (excluding common stop words)
+        stop_words = {'the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'had', 'her', 'was', 'one', 'our', 'out', 'day', 'get', 'has', 'him', 'his', 'how', 'man', 'new', 'now', 'old', 'see', 'two', 'who', 'boy', 'did', 'its', 'let', 'put', 'say', 'she', 'too', 'use'}
         
-        # Add entity-based keywords
+        for word, freq in word_freq.most_common(20):
+            if word not in stop_words and freq > 1:
+                domain_keywords.add(word)
+        
+        # Add entity-based keywords (but filter out common person names that might be sport names)
         for entity in entities:
-            if entity['label'] in ['ORG', 'PRODUCT', 'TECHNOLOGY']:
+            # Only add entities that are clearly organizational or technical
+            if entity['label'] in ['ORG', 'PRODUCT', 'TECHNOLOGY', 'NORP', 'EVENT']:
                 domain_keywords.add(entity['text'].lower())
         
-        # Structural patterns
+        # Detect structural patterns dynamically
         structural_patterns = set()
         
         # List structures
         if re.search(r'\n\s*[-*•]\s+', content) or re.search(r'\n\s*\d+\.\s+', content):
             structural_patterns.add('list_format')
+        
+        # Simple list (lines with single words/phrases)
+        lines = content.split('\n')
+        short_lines = [line.strip() for line in lines if line.strip() and len(line.strip()) < 50]
+        if len(short_lines) > 5 and len(short_lines) / len(lines) > 0.5:
+            structural_patterns.add('simple_list')
         
         # Command structures
         if re.search(r'\$\s+\w+', content) or re.search(r'```', content):
@@ -146,23 +156,23 @@ class ContentLearningSystem:
         if content.count(':') > 5 and len(content.split('\n')) > 10:
             structural_patterns.add('reference_format')
         
-        # Entity types
-        entity_types = set(entity['label'] for entity in entities)
+        # Entity types (but be more selective)
+        entity_types = set()
+        for entity in entities:
+            # Skip PERSON entities for lists that might be sports/games
+            if entity['label'] != 'PERSON' or len(entities) < 10:
+                entity_types.add(entity['label'])
         
-        # Content markers (specific identifiers)
+        # Content markers (specific identifiers) - keep minimal and specific
         content_markers = set()
         
-        # Technology markers
+        # Only add very specific technical markers
         if 'kubernetes' in content_lower or 'kubectl' in content_lower:
             content_markers.add('kubernetes')
-        if 'docker' in content_lower:
+        if 'docker' in content_lower and 'container' in content_lower:
             content_markers.add('docker')
-        if 'git' in content_lower:
+        if 'git' in content_lower and ('commit' in content_lower or 'repository' in content_lower):
             content_markers.add('git')
-        
-        # Sports markers
-        if any(sport in content_lower for sport in ['football', 'soccer', 'basketball', 'baseball']):
-            content_markers.add('sports_schedule')
         
         # Create semantic hash
         signature_data = {
@@ -293,6 +303,7 @@ class IntelligentAnalyzer:
         self.nlp = None
         self._load_models()
         self.learning_system = ContentLearningSystem()
+        self.classifier = IntelligentClassifier()
         
         # Dynamic table naming strategies
         self.naming_strategies = {
@@ -336,16 +347,33 @@ class IntelligentAnalyzer:
         # Create content signature
         signature = self.learning_system.analyze_content_signature(content, entities)
         
-        # Find similar content
+        # Use classifier to get proper content type
+        classification_result = await self.classifier.classify_content(content, filename)
+        
+        # Find similar content and check for duplicates
         similar_content = self.learning_system.find_similar_content(signature)
         
-        # Determine table name intelligently
+        # Check for near-duplicate content (>0.95 similarity)
+        if similar_content and similar_content[0][1] > 0.95:
+            logger.warning(f"Near-duplicate content detected for {filename} (similarity: {similar_content[0][1]:.1%})")
+            # Could return existing document ID instead of processing
+        
+        # Determine table name intelligently (enhanced with classification)
         table_name, confidence, reasoning = self._determine_intelligent_table(
-            signature, similar_content, content, filename
+            signature, similar_content, content, filename, classification_result
         )
         
         # Extract comprehensive data
-        extracted_data = self._extract_intelligent_data(content, entities, signature, filename)
+        extracted_data = self._extract_intelligent_data(content, entities, signature, filename, classification_result)
+        
+        # Add content_type and domain fields that are missing
+        if classification_result:
+            extracted_data['content_type'] = classification_result.content_type.value
+            extracted_data['classification_confidence'] = classification_result.confidence
+            extracted_data['classification_reasoning'] = classification_result.reasoning
+        else:
+            extracted_data['content_type'] = self._map_table_to_content_type(table_name)
+        extracted_data['domain'] = self._extract_domain_from_table(table_name)
         
         # Suggest schema evolution
         content_patterns = [extracted_data]  # In real implementation, would include similar content
@@ -368,13 +396,13 @@ class IntelligentAnalyzer:
         )
     
     def _determine_intelligent_table(self, signature: ContentSignature, similar_content: List[Tuple[str, float]], 
-                                   content: str, filename: str) -> Tuple[str, float, str]:
+                                   content: str, filename: str, classification_result=None) -> Tuple[str, float, str]:
         """Intelligently determine table name using learning and similarity."""
         
         reasoning_parts = []
         
-        # If we have very similar content, use the same table
-        if similar_content and similar_content[0][1] > 0.8:
+        # If we have very similar content, use the same table (highest priority)
+        if similar_content and similar_content[0][1] > 0.7:
             # Get table name from most similar content
             conn = sqlite3.connect(self.learning_system.learning_db_path)
             cursor = conn.cursor()
@@ -389,63 +417,117 @@ class IntelligentAnalyzer:
                 reasoning_parts.append(f"Matched similar content with {confidence:.1%} similarity")
                 return table_name, confidence, "; ".join(reasoning_parts)
         
-        # Content marker-based naming (most specific)
+        # Generate collection name dynamically based on content patterns
+        table_name = self._generate_dynamic_collection_name(signature, content, filename)
+        
+        # Calculate confidence based on how distinctive the content is
+        confidence = self._calculate_collection_confidence(signature, content, filename)
+        
+        reasoning_parts.append(f"Dynamic collection '{table_name}' created based on content patterns")
+        reasoning_parts.append(f"Top keywords: {', '.join(list(signature.domain_keywords)[:3])}")
+        reasoning_parts.append(f"Structure: {', '.join(signature.structural_patterns)}")
+        
+        return table_name, confidence, "; ".join(reasoning_parts)
+    
+    def _generate_dynamic_collection_name(self, signature: ContentSignature, content: str, filename: str) -> str:
+        """Generate a meaningful collection name based on content patterns."""
+        
+        # Use the most frequent meaningful keywords to create a collection name
+        keywords = list(signature.domain_keywords)
+        
+        # Start with specific technical markers
         if 'kubernetes' in signature.content_markers:
-            reasoning_parts.append("Kubernetes-specific content detected")
-            return 'kubernetes_resources', 0.9, "; ".join(reasoning_parts)
-        
+            return 'kubernetes_resources'
         if 'docker' in signature.content_markers:
-            reasoning_parts.append("Docker-specific content detected")
-            return 'docker_references', 0.9, "; ".join(reasoning_parts)
+            return 'docker_references'
+        if 'git' in signature.content_markers:
+            return 'git_references'
         
-        if 'sports_schedule' in signature.content_markers:
-            reasoning_parts.append("Sports schedule format detected")
-            return 'sports_schedules', 0.85, "; ".join(reasoning_parts)
+        # Use structural patterns for generic types
+        if 'simple_list' in signature.structural_patterns:
+            # For simple lists, use the most common meaningful word
+            if keywords:
+                primary_keyword = keywords[0]
+                # Create a collection name based on the primary keyword
+                if len(keywords) == 1:
+                    return f"{primary_keyword}_list"
+                else:
+                    # Multiple keywords - create a more general collection
+                    return f"{primary_keyword}_collection"
+            else:
+                return 'simple_lists'
         
-        # Structural pattern-based naming
         if 'recipe_format' in signature.structural_patterns:
-            reasoning_parts.append("Recipe structure detected")
-            return 'cooking_recipes', 0.8, "; ".join(reasoning_parts)
+            return 'cooking_recipes'
         
         if 'command_format' in signature.structural_patterns:
-            reasoning_parts.append("Command/technical reference format")
-            return 'technical_references', 0.75, "; ".join(reasoning_parts)
+            return 'technical_references'
         
         if 'schedule_format' in signature.structural_patterns:
-            reasoning_parts.append("Schedule/calendar format detected")
-            return 'event_schedules', 0.7, "; ".join(reasoning_parts)
+            return 'event_schedules'
         
-        # Domain-based naming (more general)
-        domain_keywords = signature.domain_keywords
-        
-        if any(kw in domain_keywords for kw in ['command', 'server', 'api', 'database']):
-            reasoning_parts.append("Technical domain keywords detected")
-            return 'technical_documents', 0.6, "; ".join(reasoning_parts)
-        
-        if any(kw in domain_keywords for kw in ['team', 'game', 'match', 'player']):
-            reasoning_parts.append("Sports domain keywords detected")
-            return 'sports_documents', 0.6, "; ".join(reasoning_parts)
-        
-        if any(kw in domain_keywords for kw in ['recipe', 'ingredient', 'cook']):
-            reasoning_parts.append("Cooking domain keywords detected")
-            return 'cooking_documents', 0.6, "; ".join(reasoning_parts)
+        # Domain-based naming using most frequent keywords
+        if keywords:
+            primary_keyword = keywords[0]
+            
+            # Check if it's a technical domain
+            tech_indicators = ['command', 'server', 'api', 'database', 'config', 'install', 'error', 'system']
+            if any(indicator in keywords for indicator in tech_indicators):
+                return f"{primary_keyword}_technical"
+            
+            # Check if it's a sports domain
+            sports_indicators = ['team', 'game', 'match', 'player', 'score', 'season', 'league', 'football', 'basketball']
+            if any(indicator in keywords for indicator in sports_indicators):
+                return f"{primary_keyword}_sports"
+            
+            # Check if it's a cooking domain
+            cooking_indicators = ['recipe', 'ingredient', 'cook', 'bake', 'serve', 'tablespoon', 'cup']
+            if any(indicator in keywords for indicator in cooking_indicators):
+                return f"{primary_keyword}_cooking"
+            
+            # Generic domain-based naming
+            return f"{primary_keyword}_documents"
         
         # Filename-based fallback
         filename_lower = filename.lower()
         if 'cheat' in filename_lower or 'reference' in filename_lower:
-            reasoning_parts.append("Reference document based on filename")
-            return 'reference_documents', 0.5, "; ".join(reasoning_parts)
+            return 'reference_documents'
         
         if 'schedule' in filename_lower or 'calendar' in filename_lower:
-            reasoning_parts.append("Schedule document based on filename")
-            return 'schedule_documents', 0.5, "; ".join(reasoning_parts)
+            return 'schedule_documents'
         
         # Default
-        reasoning_parts.append("General document - no specific patterns detected")
-        return 'general_documents', 0.3, "; ".join(reasoning_parts)
+        return 'general_documents'
+    
+    def _calculate_collection_confidence(self, signature: ContentSignature, content: str, filename: str) -> float:
+        """Calculate confidence in collection assignment based on content distinctiveness."""
+        
+        confidence = 0.5  # Base confidence
+        
+        # Boost confidence for specific technical markers
+        if signature.content_markers:
+            confidence += 0.3
+        
+        # Boost confidence for clear structural patterns
+        if signature.structural_patterns:
+            confidence += 0.2
+        
+        # Boost confidence for rich domain keywords
+        if len(signature.domain_keywords) > 3:
+            confidence += 0.2
+        
+        # Boost confidence for simple lists (clear structure)
+        if 'simple_list' in signature.structural_patterns:
+            confidence += 0.1
+        
+        # Reduce confidence for very generic content
+        if not signature.domain_keywords and not signature.structural_patterns:
+            confidence -= 0.2
+        
+        return min(confidence, 1.0)
     
     def _extract_intelligent_data(self, content: str, entities: List[Dict], 
-                                signature: ContentSignature, filename: str) -> Dict[str, Any]:
+                                signature: ContentSignature, filename: str, classification_result=None) -> Dict[str, Any]:
         """Extract data with intelligence about content type."""
         
         # Base extraction
@@ -497,6 +579,17 @@ class IntelligentAnalyzer:
         
         if 'command_format' in signature.structural_patterns:
             content_specific.update(self._extract_command_data(content))
+        
+        # Add classification-based extraction
+        if classification_result:
+            if classification_result.content_type == ContentType.CONTACT_INFO:
+                content_specific.update(self._extract_contact_data(content))
+            elif classification_result.content_type == ContentType.PRODUCT_DATA:
+                content_specific.update(self._extract_product_data(content))
+            elif classification_result.content_type == ContentType.EVENT_INFO:
+                content_specific.update(self._extract_event_data(content))
+            elif classification_result.content_type == ContentType.RECIPE:
+                content_specific.update(self._extract_recipe_data(content))
         
         # Add content-specific data as JSON to avoid column mismatches
         if content_specific:
@@ -554,6 +647,47 @@ class IntelligentAnalyzer:
             'code_examples': code_blocks,
             'command_options': list(set(options)),
             'content_type': 'reference_guide'
+        }
+    
+    def _extract_contact_data(self, content: str) -> Dict[str, Any]:
+        """Extract contact information."""
+        names = re.findall(r'(?:Name|Contact):\s*([^\n]+)', content, re.IGNORECASE)
+        companies = re.findall(r'(?:Company|Organization):\s*([^\n]+)', content, re.IGNORECASE)
+        addresses = re.findall(r'(?:Address):\s*([^\n]+(?:\n[^\n]+)*)', content, re.IGNORECASE)
+        
+        return {
+            'contact_names': names,
+            'companies': companies,
+            'addresses': addresses,
+            'content_type': 'contact_info'
+        }
+    
+    def _extract_product_data(self, content: str) -> Dict[str, Any]:
+        """Extract product information."""
+        products = re.findall(r'(?:Product|Item):\s*([^\n]+)', content, re.IGNORECASE)
+        skus = re.findall(r'(?:SKU|Product Code):\s*([^\n]+)', content, re.IGNORECASE)
+        prices = re.findall(r'\$([0-9,]+\.?[0-9]*)', content)
+        categories = re.findall(r'(?:Category|Type):\s*([^\n]+)', content, re.IGNORECASE)
+        
+        return {
+            'products': products,
+            'skus': skus,
+            'prices': prices,
+            'categories': categories,
+            'content_type': 'product_data'
+        }
+    
+    def _extract_event_data(self, content: str) -> Dict[str, Any]:
+        """Extract event information."""
+        events = re.findall(r'(?:Event|Conference|Meeting):\s*([^\n]+)', content, re.IGNORECASE)
+        locations = re.findall(r'(?:Location|Venue|Address):\s*([^\n]+)', content, re.IGNORECASE)
+        times = re.findall(r'(?:Time|Schedule):\s*([^\n]+)', content, re.IGNORECASE)
+        
+        return {
+            'events': events,
+            'locations': locations,
+            'times': times,
+            'content_type': 'event_info'
         }
     
     def _clean_content(self, content: str) -> str:
@@ -672,6 +806,54 @@ class IntelligentAnalyzer:
             feedback['learning_note'] = "New content type detected - expanding knowledge base"
         
         return feedback
+    
+    def _map_table_to_content_type(self, table_name: str) -> str:
+        """Map table name to content type."""
+        mapping = {
+            'contacts': 'contact_info',
+            'business_cards': 'business_card', 
+            'products': 'product_data',
+            'events': 'event_info',
+            'cooking_recipes': 'recipe',
+            'transactions': 'financial_data',
+            'employees': 'employee_data',
+            'articles': 'article',
+            'kubernetes_resources': 'technical_document',
+            'technical_documents': 'technical_document',
+            'technical_references': 'technical_reference',
+            'sports_documents': 'sports_document',
+            'schedule_documents': 'schedule',
+            'general_documents': 'document'
+        }
+        return mapping.get(table_name, 'document')
+    
+    def _extract_domain_from_table(self, table_name: str) -> str:
+        """Extract domain from table name."""
+        if '_' in table_name:
+            return table_name.split('_')[0]
+        return table_name
+    
+    def _content_type_to_collection(self, content_type: ContentType) -> str:
+        """Map content type to collection name."""
+        mapping = {
+            ContentType.CONTACT_INFO: 'contacts',
+            ContentType.BUSINESS_CARD: 'business_cards',
+            ContentType.PRODUCT_DATA: 'products',
+            ContentType.EVENT_INFO: 'events',
+            ContentType.RECIPE: 'cooking_recipes',
+            ContentType.FINANCIAL_DATA: 'transactions',
+            ContentType.EMPLOYEE_DATA: 'employees',
+            ContentType.ARTICLE: 'articles',
+            ContentType.LOG_ENTRIES: 'log_entries',
+            ContentType.INVOICE: 'invoices',
+            ContentType.EMAIL_THREAD: 'email_threads',
+            ContentType.MEETING_NOTES: 'meeting_notes',
+            ContentType.COVER_LETTER: 'cover_letters',
+            ContentType.RESUME_CV: 'resumes',
+            ContentType.PERSONAL_STATEMENT: 'personal_statements',
+            ContentType.UNKNOWN: 'general_documents'
+        }
+        return mapping.get(content_type, 'general_documents')
     
     def _fallback_analysis(self, content: str, filename: str) -> IntelligentResult:
         """Fallback when models aren't available."""

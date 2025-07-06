@@ -31,6 +31,21 @@ intelligent_analyzer = IntelligentAnalyzer()
 db_manager = DatabaseManager()
 document_processor = DocumentProcessor()
 
+# Initialize MongoDB connection
+@app.on_event("startup")
+async def startup_event():
+    """Initialize MongoDB connection on startup."""
+    try:
+        await db_manager.mongo_manager.connect()
+        logger.info("MongoDB connection established")
+    except Exception as e:
+        logger.error(f"Failed to connect to MongoDB: {e}")
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Close MongoDB connection on shutdown."""
+    await db_manager.mongo_manager.disconnect()
+
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     """Modern home page with beautiful UI."""
@@ -86,14 +101,14 @@ async def process_and_store_content(file: UploadFile = File(...)):
         # Intelligent analysis with learning
         result = await intelligent_analyzer.analyze_content(text_content, file.filename)
         
-        # Create table with intelligent schema evolution
-        table_name = await db_manager.create_intelligent_table(
+        # Create collection with intelligent schema evolution
+        collection_name = await db_manager.create_intelligent_collection(
             result.table_name, 
             result.schema_evolution
         )
         
-        # Store structured data
-        await db_manager.insert_structured_data(table_name, result.extracted_data)
+        # Store structured data in MongoDB
+        await db_manager.insert_document(collection_name, result.extracted_data)
         
         return {
             "filename": file.filename,
@@ -167,11 +182,13 @@ async def health_check():
     """Health check endpoint."""
     return {
         "status": "healthy",
-        "classifier_loaded": classifier.nlp is not None,
-        "database_connected": True,
+        "classifier_loaded": intelligent_analyzer.nlp is not None,
+        "database_connected": db_manager.connected,
+        "mongodb_connected": db_manager.mongo_manager.client is not None,
         "settings": {
             "confidence_threshold": settings.confidence_threshold,
-            "spacy_model": settings.spacy_model
+            "spacy_model": settings.spacy_model,
+            "mongo_url": settings.mongo_url
         }
     }
 

@@ -56,7 +56,7 @@ class IntelligentClassifier:
                     r'\b(mr|mrs|ms|dr|prof)\.?\s+[A-Z][a-z]+\s+[A-Z][a-z]+\b',  # formal names
                 ],
                 'weight': 3,
-                'min_confidence': 0.6
+                'min_confidence': 0.3
             },
             
             ContentType.BUSINESS_CARD: {
@@ -67,7 +67,7 @@ class IntelligentClassifier:
                     r'\bwww\.\w+\.(com|org|net)\b',
                 ],
                 'weight': 2,
-                'min_confidence': 0.7
+                'min_confidence': 0.3
             },
             
             ContentType.PRODUCT_DATA: {
@@ -79,7 +79,7 @@ class IntelligentClassifier:
                     r'\bin\s+stock\s*:?\s*\d+',  # inventory
                 ],
                 'weight': 2,
-                'min_confidence': 0.6
+                'min_confidence': 0.3
             },
             
             ContentType.INVOICE: {
@@ -103,7 +103,7 @@ class IntelligentClassifier:
                     r'\b(january|february|march|april|may|june|july|august|september|october|november|december)\b',  # months
                 ],
                 'weight': 2,
-                'min_confidence': 0.6
+                'min_confidence': 0.3
             },
             
             ContentType.ARTICLE: {
@@ -115,7 +115,7 @@ class IntelligentClassifier:
                     r'\babstract\s*:',  # abstract
                 ],
                 'weight': 1,
-                'min_confidence': 0.5
+                'min_confidence': 0.3
             },
             
             ContentType.RECIPE: {
@@ -129,7 +129,7 @@ class IntelligentClassifier:
                     r'\b\d+\s+(cup|cups|tsp|tbsp|lb|oz|gram|ml)\b',  # measurements
                 ],
                 'weight': 2,
-                'min_confidence': 0.7
+                'min_confidence': 0.3
             },
             
             ContentType.FINANCIAL_DATA: {
@@ -154,7 +154,7 @@ class IntelligentClassifier:
                     r'\bexception\b|\bstack\s+trace\b',  # errors
                 ],
                 'weight': 2,
-                'min_confidence': 0.6
+                'min_confidence': 0.3
             },
             
             ContentType.EMPLOYEE_DATA: {
@@ -167,7 +167,7 @@ class IntelligentClassifier:
                     r'\bposition\s*:',
                 ],
                 'weight': 2,
-                'min_confidence': 0.7
+                'min_confidence': 0.3
             },
             
             ContentType.EMAIL_THREAD: {
@@ -193,7 +193,7 @@ class IntelligentClassifier:
                     r'^\s*[-*]\s+',  # bullet points
                 ],
                 'weight': 2,
-                'min_confidence': 0.7
+                'min_confidence': 0.3
             }
         }
     
