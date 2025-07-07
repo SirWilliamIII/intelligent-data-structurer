@@ -1,9 +1,0 @@
-Contact Information
-Name: Sarah Johnson
-Email: sarah.johnson@techcorp.com
-Phone: (555) 123-4567
-Mobile: 555-987-6543
-Address: 1234 Tech Avenue, Suite 100
-San Francisco, CA 94105
-Company: TechCorp Solutions
-Title: Senior Software Engineer

@@ -26,6 +26,7 @@ import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.cluster import DBSCAN
+from core.config import settings
 
 @dataclass
 class CollectionSeed:
@@ -66,12 +67,15 @@ class OrganicCollectionManager:
         self.collection_registry = self.db["collection_registry"]
         self.collection_seeds = self.db["collection_seeds"]
         
-        # Evolution parameters
-        self.min_seed_size = 2  # Minimum docs to form a collection
+        # Evolution parameters - now configurable
+        self.staging_threshold = settings.staging_threshold  # Documents needed before creating collection
+        self.min_seed_size = settings.min_seed_size  # Minimum docs to form a collection seed
         self.max_collection_size = 100  # Split collections that get too large
         self.similarity_threshold = 0.15  # How similar docs need to be
         self.health_check_interval = timedelta(hours=6)
         self.seed_maturation_time = timedelta(minutes=1)  # Time before seed becomes collection
+        self.max_staging_time = timedelta(hours=settings.max_staging_time_hours)  # Max time in staging
+        self.collection_birth_confidence = settings.collection_birth_confidence  # Confidence threshold for new collections
         
         # Collection genetics
         self.collection_dna = {}
@@ -135,6 +139,17 @@ class OrganicCollectionManager:
     
     async def _evaluate_collection_opportunities(self, doc_id: str, document_data: Dict[str, Any]):
         """Evaluate if this document creates or joins collection opportunities."""
+        
+        # First check if we've reached the staging threshold
+        staging_count = self.staging_collection.count_documents({"collection_assigned": None})
+        
+        if staging_count < self.staging_threshold:
+            # Not enough documents in staging yet - just log and return
+            logger.info(f"📥 Document staged ({staging_count}/{self.staging_threshold} threshold). Waiting for more documents.")
+            return
+        
+        # We've reached the threshold - now evaluate clustering opportunities
+        logger.info(f"⚙️ Staging threshold reached ({staging_count} documents). Evaluating clustering opportunities.")
         
         # Find similar documents in staging
         similar_docs = await self._find_similar_staged_documents(document_data)
@@ -333,7 +348,7 @@ class OrganicCollectionManager:
         # Check seeds for maturation
         mature_seeds = list(self.collection_seeds.find({
             "first_seen": {"$lt": datetime.utcnow() - self.seed_maturation_time},
-            "birth_confidence": {"$gte": 0.5}
+            "birth_confidence": {"$gte": self.collection_birth_confidence}
         }))
         
         for seed in mature_seeds:

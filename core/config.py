@@ -48,6 +48,17 @@ class Settings(BaseSettings):
     log_level: str = Field(default="INFO", env="LOG_LEVEL")
     log_file: Path = Field(default=Path("./logs/app.log"), env="LOG_FILE")
     
+    # Collection Management
+    staging_threshold: int = Field(default=10, env="STAGING_THRESHOLD")
+    min_seed_size: int = Field(default=5, env="MIN_SEED_SIZE")
+    max_staging_time_hours: int = Field(default=24, env="MAX_STAGING_TIME_HOURS")
+    collection_birth_confidence: float = Field(default=0.6, env="COLLECTION_BIRTH_CONFIDENCE")
+    
+    # MCP Configuration
+    mcp_allowed_dir: Optional[str] = Field(default=None, env="MCP_ALLOWED_DIR")
+    mcp_max_file_size: Optional[str] = Field(default=None, env="MCP_MAX_FILE_SIZE")
+    mcp_search_timeout: Optional[str] = Field(default=None, env="MCP_SEARCH_TIMEOUT")
+    
     class Config:
         env_file = ".env"
         case_sensitive = False
