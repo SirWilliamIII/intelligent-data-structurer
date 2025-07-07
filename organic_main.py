@@ -291,9 +291,9 @@ async def health_check():
 if __name__ == "__main__":
     logger.info("🚀 Starting Organic Intelligent Data Processor v2.0")
     uvicorn.run(
-        "main:app",
+        "organic_main:app",
         host="0.0.0.0", 
-        port=8000,  # Main port
+        port=8001,  # Different port to avoid conflicts
         reload=settings.debug,
         log_level=settings.log_level.lower()
     )
