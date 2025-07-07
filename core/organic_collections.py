@@ -67,11 +67,11 @@ class OrganicCollectionManager:
         self.collection_seeds = self.db["collection_seeds"]
         
         # Evolution parameters
-        self.min_seed_size = 3  # Minimum docs to form a collection
+        self.min_seed_size = 2  # Minimum docs to form a collection
         self.max_collection_size = 100  # Split collections that get too large
-        self.similarity_threshold = 0.3  # How similar docs need to be
+        self.similarity_threshold = 0.15  # How similar docs need to be
         self.health_check_interval = timedelta(hours=6)
-        self.seed_maturation_time = timedelta(hours=24)  # Time before seed becomes collection
+        self.seed_maturation_time = timedelta(minutes=1)  # Time before seed becomes collection
         
         # Collection genetics
         self.collection_dna = {}
@@ -232,8 +232,9 @@ class OrganicCollectionManager:
             last_reinforced=datetime.utcnow()
         )
         
-        # Store the seed
-        result = self.collection_seeds.insert_one(asdict(seed))
+        # Store the seed (convert sets to lists for MongoDB)
+        seed_data = self._clean_data_for_mongo(asdict(seed))
+        result = self.collection_seeds.insert_one(seed_data)
         
         logger.info(f"🌱 Collection seed created: {theme_keywords} ({len(document_ids)} docs, {birth_confidence:.2f} confidence)")
         
@@ -332,7 +333,7 @@ class OrganicCollectionManager:
         # Check seeds for maturation
         mature_seeds = list(self.collection_seeds.find({
             "first_seen": {"$lt": datetime.utcnow() - self.seed_maturation_time},
-            "birth_confidence": {"$gte": 0.7}
+            "birth_confidence": {"$gte": 0.5}
         }))
         
         for seed in mature_seeds:
