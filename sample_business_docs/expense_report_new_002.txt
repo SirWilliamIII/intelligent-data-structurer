@@ -1,0 +1,41 @@
+EXPENSE REPORT
+
+Employee Information:
+Name: Robert Kim
+Employee ID: EMP-5432
+Department: Sales
+Manager: Lisa Rodriguez
+Report Period: March 10-20, 2024
+Report Date: March 22, 2024
+
+Business Purpose: Sales calls and regional sales meeting in Boston
+
+Expense Details:
+Date        Category          Description                           Amount
+---------------------------------------------------------------------------
+03/10/2024  Transportation   Taxi to airport                       $28.00
+03/10/2024  Airfare         Flight LAX-BOS (Delta 456)            $567.00
+03/10/2024  Transportation   Uber from Logan airport               $45.00
+03/10/2024  Hotel           Marriott Boston (3 nights)            $720.00
+03/11/2024  Meals           Breakfast                              $18.50
+03/11/2024  Meals           Lunch with client                      $89.00
+03/11/2024  Meals           Dinner - sales meeting                $156.00
+03/12/2024  Transportation   Uber to prospect office               $22.00
+03/12/2024  Meals           Business lunch                         $145.00
+03/12/2024  Entertainment   Client dinner                          $234.00
+03/13/2024  Transportation   Taxi to airport                       $32.00
+03/13/2024  Airfare         Flight BOS-LAX (Delta 789)            $589.00
+
+                                           Subtotal:        $2,645.50
+                                           Cash Advance:    ($500.00)
+                                           TOTAL DUE:       $2,145.50
+
+Receipts Attached: Yes [12 receipts]
+
+Notes:
+- Client dinner resulted in $75,000 new business
+- All meals within per diem limits
+- Sales meeting generated 5 new leads
+
+Employee Signature: Robert Kim              Date: 03/22/2024
+Approved By: Lisa Rodriguez                Date: 03/23/2024

@@ -1,0 +1,34 @@
+INVOICE
+
+Invoice #: INV-2024-001
+Date: 01/15/2024
+Due Date: 02/15/2024
+
+Bill To:
+Acme Corporation
+123 Business Plaza
+New York, NY 10001
+Contact: John Smith
+Email: john.smith@acme.com
+Phone: (555) 123-4567
+
+Ship To:
+Same as billing address
+
+Items:
+---------------------------------------------------------------------
+Description                    Quantity    Unit Price    Total
+---------------------------------------------------------------------
+Enterprise Software License    1           $5,000.00     $5,000.00
+Professional Services          40 hrs      $150.00       $6,000.00
+Training Session              2 days      $1,200.00     $2,400.00
+Support Package (Annual)      1           $2,500.00     $2,500.00
+
+Subtotal:                                               $15,900.00
+Tax (8.875%):                                           $1,411.13
+Total Due:                                              $17,311.13
+
+Payment Terms: Net 30
+Please include invoice number with payment.
+
+Thank you for your business!

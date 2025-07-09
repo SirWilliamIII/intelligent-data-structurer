@@ -1,0 +1,77 @@
+MONTHLY FINANCIAL STATEMENT
+
+TechStart Industries Inc.
+Statement of Income and Expenses
+For the Month Ended January 31, 2024
+
+REVENUE:
+Product Sales                           $487,650
+Service Revenue                         $213,400
+Subscription Revenue                    $156,789
+Other Income                            $12,450
+    Total Revenue:                      $870,289
+
+COST OF GOODS SOLD:
+Direct Materials                        $145,230
+Direct Labor                           $89,560
+Manufacturing Overhead                  $43,210
+    Total COGS:                        $278,000
+    
+GROSS PROFIT:                          $592,289
+Gross Margin %:                        68.1%
+
+OPERATING EXPENSES:
+Sales & Marketing:
+  Advertising                          $45,670
+  Sales Commissions                    $34,500
+  Marketing Salaries                   $67,890
+  Trade Shows                          $12,300
+    Total S&M:                         $160,360
+
+General & Administrative:
+  Executive Salaries                   $125,000
+  Office Rent                          $18,500
+  Utilities                            $3,450
+  Insurance                            $8,900
+  Professional Fees                    $15,600
+  Office Supplies                      $2,340
+    Total G&A:                         $173,790
+
+Research & Development:
+  R&D Salaries                         $98,450
+  Equipment                            $23,400
+  Software Licenses                    $8,790
+    Total R&D:                         $130,640
+
+Total Operating Expenses:              $464,790
+
+OPERATING INCOME:                      $127,499
+Operating Margin %:                    14.7%
+
+OTHER INCOME (EXPENSES):
+Interest Income                        $2,340
+Interest Expense                       ($5,670)
+    Net Other:                         ($3,330)
+
+INCOME BEFORE TAXES:                   $124,169
+Income Tax Expense (21%):              $26,076
+
+NET INCOME:                            $98,093
+Net Margin %:                          11.3%
+
+KEY METRICS:
+Customer Acquisition Cost:             $234
+Monthly Recurring Revenue:             $156,789
+Customer Churn Rate:                   2.3%
+Days Sales Outstanding:                42
+Current Ratio:                         2.8
+Debt-to-Equity Ratio:                  0.35
+
+Variance from Budget:
+Revenue:                               +8.2%
+Expenses:                              +3.1%
+Net Income:                            +12.4%
+
+Prepared By: Janet Foster, CPA
+Date: February 10, 2024
+Reviewed By: Mark Stevens, CFO

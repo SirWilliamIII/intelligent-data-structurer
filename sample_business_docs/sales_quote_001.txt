@@ -1,0 +1,81 @@
+QUOTATION
+
+DataTech Solutions Inc.
+789 Technology Drive
+Boston, MA 02110
+Phone: (617) 555-8900
+Email: sales@datatechsolutions.com
+
+Quote Number: QT-2024-1156
+Quote Date: February 18, 2024
+Valid Until: March 18, 2024
+
+Prepared For:
+Midwest Manufacturing Corp
+Attn: Thomas Anderson, IT Director
+2500 Industrial Parkway
+Milwaukee, WI 53201
+Phone: (414) 555-2345
+Email: t.anderson@midwestmfg.com
+
+Dear Mr. Anderson,
+
+Thank you for your interest in DataTech Solutions. We are pleased to provide this quotation for your data analytics platform requirements.
+
+QUOTATION DETAILS:
+
+Item                                    Quantity    Unit Price    Extended Price
+--------------------------------------------------------------------------------
+Software Licenses:
+DataInsight Analytics Platform Pro      25 users    $299/month    $7,475/month
+Real-time Dashboard Module              1 instance  $599/month    $599/month
+Predictive Analytics Add-on             1 license   $899/month    $899/month
+
+Professional Services:
+Platform Implementation                 80 hours     $175/hour     $14,000
+Data Migration Services                 40 hours     $150/hour     $6,000
+Custom Report Development              20 hours     $175/hour     $3,500
+Training (On-site, 2 days)             16 hours     $200/hour     $3,200
+
+Hardware (Optional):
+High-Performance Analytics Server       1 unit       $12,500       $12,500
+
+One-Time Setup Fees:                                               $26,700
+Monthly Subscription Total:                                        $8,973
+Optional Hardware:                                                 $12,500
+
+TOTAL FIRST MONTH COST (with hardware):                           $48,173
+TOTAL FIRST MONTH COST (without hardware):                        $35,673
+ONGOING MONTHLY COST:                                             $8,973
+
+TERMS & CONDITIONS:
+- Annual contract with monthly billing
+- 30-day money-back guarantee
+- Free software updates included
+- 24/7 technical support via phone, email, and chat
+- Service Level Agreement: 99.9% uptime guaranteed
+- Data stored in SOC 2 compliant data centers
+
+PAYMENT TERMS:
+- Setup fees due upon contract signing
+- Monthly fees billed in advance
+- NET 30 payment terms
+- 2% discount for annual prepayment
+
+NEXT STEPS:
+1. Review and approve quotation
+2. Sign service agreement
+3. Schedule kickoff meeting
+4. Begin implementation phase
+
+This quote includes everything needed to get your analytics platform operational within 30 days.
+
+We look forward to partnering with Midwest Manufacturing Corp to transform your data into actionable insights.
+
+Sincerely,
+
+Rachel Myers
+Senior Account Executive
+DataTech Solutions Inc.
+Direct: (617) 555-8925
+Email: rachel.myers@datatechsolutions.com

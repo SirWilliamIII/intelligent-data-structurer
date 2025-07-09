@@ -1,0 +1,56 @@
+Sarah Elizabeth Thompson
+Senior Software Engineer
+
+Contact Information:
+Email: sarah.thompson@email.com
+Phone: (555) 234-5678
+LinkedIn: linkedin.com/in/sarah-thompson
+Location: Seattle, WA 98101
+
+PROFESSIONAL SUMMARY
+Experienced software engineer with 8+ years developing scalable web applications and leading cross-functional teams. Expertise in full-stack development, cloud architecture, and agile methodologies. Proven track record of delivering high-quality software solutions that drive business growth.
+
+WORK EXPERIENCE
+
+Senior Software Engineer | Microsoft Corporation | Seattle, WA
+June 2020 - Present
+• Lead development of cloud-native applications serving 2M+ daily active users
+• Architected microservices infrastructure reducing system latency by 40%
+• Mentored team of 5 junior developers and conducted technical interviews
+• Implemented CI/CD pipelines improving deployment frequency by 300%
+
+Software Engineer II | Amazon Web Services | Seattle, WA
+March 2018 - May 2020
+• Developed RESTful APIs for AWS Lambda service handling 10M+ requests/day
+• Optimized database queries resulting in 60% performance improvement
+• Collaborated with product managers to define technical requirements
+• Contributed to open-source projects with 500+ GitHub stars
+
+Software Developer | TechStartup Inc. | San Francisco, CA
+July 2016 - February 2018
+• Built responsive web applications using React and Node.js
+• Implemented automated testing increasing code coverage to 85%
+• Participated in daily standups and sprint planning sessions
+• Reduced bug count by 50% through code review practices
+
+EDUCATION
+
+Master of Science in Computer Science
+University of Washington | 2016
+GPA: 3.8/4.0
+
+Bachelor of Science in Computer Engineering
+Stanford University | 2014
+GPA: 3.7/4.0, Magna Cum Laude
+
+TECHNICAL SKILLS
+Languages: Python, JavaScript, Java, C++, Go
+Frameworks: React, Node.js, Django, Spring Boot
+Databases: PostgreSQL, MongoDB, Redis, DynamoDB
+Cloud: AWS, Azure, GCP, Docker, Kubernetes
+Tools: Git, JIRA, Jenkins, Terraform, DataDog
+
+CERTIFICATIONS
+• AWS Solutions Architect - Professional
+• Certified Kubernetes Administrator (CKA)
+• Google Cloud Professional Cloud Architect

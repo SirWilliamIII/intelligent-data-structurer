@@ -16,6 +16,7 @@ from core.config import settings
 from core.organic_collections import OrganicCollectionManager
 from core.intelligent_analyzer import IntelligentAnalyzer
 from core.document_processor import DocumentProcessor
+from core.business_classifier import BusinessDocumentClassifier
 
 app = FastAPI(
     title="Organic Intelligent Data Processor",
@@ -30,6 +31,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # Initialize components
 document_processor = DocumentProcessor()
 intelligent_analyzer = IntelligentAnalyzer()
+business_classifier = BusinessDocumentClassifier()
 mongo_client = None
 organic_manager = None
 

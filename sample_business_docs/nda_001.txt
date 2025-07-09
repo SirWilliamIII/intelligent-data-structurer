@@ -1,0 +1,76 @@
+NON-DISCLOSURE AGREEMENT
+
+This Non-Disclosure Agreement ("Agreement") is entered into as of February 25, 2024 ("Effective Date")
+
+BETWEEN:
+Innovation Tech Corp. ("Disclosing Party")
+A California Corporation
+789 Tech Park Drive
+Palo Alto, CA 94301
+
+AND:
+Strategic Ventures LLC ("Receiving Party")
+A Delaware Limited Liability Company
+321 Investment Boulevard
+New York, NY 10013
+
+RECITALS:
+WHEREAS, the Disclosing Party possesses certain confidential and proprietary information relating to its revolutionary AI-powered analytics platform;
+WHEREAS, the Receiving Party desires to evaluate such information for the purpose of exploring a potential business relationship;
+WHEREAS, the Disclosing Party is willing to disclose such information under the terms and conditions set forth herein;
+
+NOW, THEREFORE, in consideration of the mutual promises and covenants contained herein, the parties agree:
+
+1. DEFINITION OF CONFIDENTIAL INFORMATION
+"Confidential Information" means any and all non-public information disclosed by the Disclosing Party, including but not limited to:
+a) Technical data, source code, algorithms, and system architecture
+b) Business plans, financial projections, and marketing strategies
+c) Customer lists, pricing information, and supplier details
+d) Trade secrets and proprietary methodologies
+e) Any information marked as "Confidential" or that would reasonably be considered confidential
+
+2. OBLIGATIONS OF RECEIVING PARTY
+The Receiving Party agrees to:
+a) Hold all Confidential Information in strict confidence
+b) Not disclose Confidential Information to any third parties
+c) Use Confidential Information solely for evaluation purposes
+d) Protect Confidential Information with the same degree of care used for its own confidential information, but no less than reasonable care
+e) Limit access to employees with a legitimate need to know
+
+3. EXCEPTIONS
+This Agreement shall not apply to information that:
+a) Was publicly known at the time of disclosure
+b) Becomes publicly known through no fault of the Receiving Party
+c) Was rightfully received from a third party without breach
+d) Was independently developed without use of Confidential Information
+e) Is required to be disclosed by law or court order
+
+4. TERM
+This Agreement shall remain in effect for three (3) years from the Effective Date, unless extended by mutual written consent.
+
+5. RETURN OF INFORMATION
+Upon request or termination of discussions, the Receiving Party shall:
+a) Return all Confidential Information and copies thereof
+b) Destroy all notes, analyses, and derivatives
+c) Provide written certification of compliance
+
+6. NO LICENSE
+Nothing in this Agreement grants any license or rights to Confidential Information except as expressly stated herein.
+
+7. REMEDIES
+The parties acknowledge that breach of this Agreement may cause irreparable harm for which monetary damages would be inadequate. The Disclosing Party shall be entitled to seek injunctive relief without prejudice to other remedies.
+
+8. GOVERNING LAW
+This Agreement shall be governed by the laws of California, without regard to conflict of law principles.
+
+9. ENTIRE AGREEMENT
+This Agreement constitutes the entire understanding between the parties and supersedes all prior agreements relating to the subject matter herein.
+
+IN WITNESS WHEREOF, the parties have executed this Agreement as of the date first written above.
+
+INNOVATION TECH CORP.              STRATEGIC VENTURES LLC
+
+_______________________           _______________________
+Name: David Chen                  Name: Sarah Johnson
+Title: Chief Legal Officer        Title: Managing Partner
+Date: _________________          Date: _________________

@@ -1,0 +1,40 @@
+EXPENSE REPORT
+
+Employee Information:
+Name: Alex Thompson
+Employee ID: EMP-3456
+Department: Operations
+Manager: Maria Santos
+Report Period: March 20-30, 2024
+Report Date: April 1, 2024
+
+Business Purpose: Operations audit and vendor meetings in Denver
+
+Expense Details:
+Date        Category          Description                           Amount
+---------------------------------------------------------------------------
+03/20/2024  Transportation   Uber to airport                       $42.00
+03/20/2024  Airfare         Flight DEN-DFW (United 567)          $445.00
+03/20/2024  Transportation   Taxi from airport                     $38.00
+03/20/2024  Hotel           Westin Denver (2 nights)              $398.00
+03/21/2024  Meals           Breakfast meeting                      $28.00
+03/21/2024  Meals           Vendor lunch                          $78.00
+03/21/2024  Meals           Dinner                                $54.00
+03/22/2024  Transportation   Uber to vendor office                 $15.00
+03/22/2024  Meals           Working lunch                          $42.00
+03/22/2024  Transportation   Taxi to airport                       $35.00
+03/22/2024  Airfare         Flight DFW-DEN (United 890)          $467.00
+
+                                           Subtotal:        $1,642.00
+                                           Cash Advance:    ($400.00)
+                                           TOTAL DUE:       $1,242.00
+
+Receipts Attached: Yes [11 receipts]
+
+Notes:
+- Audit completed successfully with no major findings
+- Vendor meetings resulted in 15% cost reduction agreement
+- All expenses within approved budget
+
+Employee Signature: Alex Thompson          Date: 04/01/2024
+Approved By: Maria Santos                  Date: 04/02/2024

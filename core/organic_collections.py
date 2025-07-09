@@ -528,8 +528,42 @@ class OrganicCollectionManager:
         return diversity
     
     def _extract_cluster_themes(self, docs: List[Dict]) -> Set[str]:
-        """Extract common themes from a cluster of documents."""
+        """Extract common themes from a cluster of documents, prioritizing business document types."""
         
+        # First, check for business document types (highest priority)
+        business_types = []
+        business_categories = []
+        
+        for doc in docs:
+            content_type = doc.get('content_type', '')
+            business_category = doc.get('business_category', '')
+            
+            # Map business document types to clean theme names
+            if content_type:
+                business_types.append(content_type)
+            if business_category:
+                business_categories.append(business_category)
+        
+        # If we have consistent business document types, use them
+        type_counts = Counter(business_types)
+        category_counts = Counter(business_categories)
+        
+        # Check if majority of documents have the same business type
+        if type_counts and len(docs) > 1:
+            most_common_type, type_count = type_counts.most_common(1)[0]
+            if type_count >= len(docs) * 0.6:  # 60% threshold
+                # Use business type as primary theme
+                themes = {most_common_type}
+                
+                # Add category if consistent
+                if category_counts:
+                    most_common_category, category_count = category_counts.most_common(1)[0]
+                    if category_count >= len(docs) * 0.6:
+                        themes.add(most_common_category.lower().replace(' ', '_'))
+                
+                return themes
+        
+        # Fallback to original semantic keyword extraction
         all_keywords = []
         for doc in docs:
             sig = doc.get('semantic_signature', {})
@@ -574,12 +608,73 @@ class OrganicCollectionManager:
         return min(confidence, 1.0)
     
     def _generate_collection_name(self, themes: Set[str]) -> str:
-        """Generate a meaningful collection name from themes."""
+        """Generate a meaningful collection name from themes, prioritizing business document types."""
         
         themes_list = list(themes)
         if not themes_list:
             return f"collection_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}"
         
+        # Check for business document types first
+        business_document_types = {
+            'invoice', 'expense_report', 'purchase_order', 'receipt', 'financial_statement',
+            'meeting_minutes', 'business_email', 'memo', 'proposal', 'report',
+            'resume', 'job_posting', 'timesheet', 'performance_review',
+            'contract', 'nda', 'work_order', 'project_plan', 'sales_quote'
+        }
+        
+        business_categories = {'financial', 'communication', 'human_resources', 'legal', 'operations', 'sales'}
+        
+        # Look for business document types in themes
+        business_types = [theme for theme in themes_list if theme in business_document_types]
+        categories = [theme for theme in themes_list if theme in business_categories]
+        
+        if business_types:
+            # Use business document type as primary name
+            primary_type = business_types[0]
+            
+            # Map to proper collection names
+            if primary_type == 'expense_report':
+                return 'expense_reports'
+            elif primary_type == 'invoice':
+                return 'invoices'
+            elif primary_type == 'meeting_minutes':
+                return 'meeting_minutes'
+            elif primary_type == 'business_email':
+                return 'business_emails'
+            elif primary_type == 'purchase_order':
+                return 'purchase_orders'
+            elif primary_type == 'contract':
+                return 'contracts'
+            elif primary_type == 'project_plan':
+                return 'project_plans'
+            elif primary_type == 'sales_quote':
+                return 'sales_quotes'
+            elif primary_type == 'work_order':
+                return 'work_orders'
+            elif primary_type == 'timesheet':
+                return 'timesheets'
+            elif primary_type == 'performance_review':
+                return 'performance_reviews'
+            elif primary_type == 'resume':
+                return 'resumes'
+            elif primary_type == 'job_posting':
+                return 'job_postings'
+            elif primary_type == 'memo':
+                return 'memos'
+            elif primary_type == 'proposal':
+                return 'proposals'
+            elif primary_type == 'report':
+                return 'reports'
+            elif primary_type == 'receipt':
+                return 'receipts'
+            elif primary_type == 'financial_statement':
+                return 'financial_statements'
+            elif primary_type == 'nda':
+                return 'ndas'
+            else:
+                return f"{primary_type}s"
+        
+        # Fallback to original logic for non-business documents
         # Sort by length (prefer longer, more specific terms)
         themes_list.sort(key=len, reverse=True)
         

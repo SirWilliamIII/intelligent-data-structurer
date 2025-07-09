@@ -1,0 +1,71 @@
+RECEIPT
+
+TechMart Electronics
+Store #458
+1234 Technology Boulevard
+Austin, TX 78759
+(512) 555-3698
+
+Date: 02/28/2024
+Time: 3:47 PM
+Transaction #: 458-2024-98745
+Cashier: Maria S.
+
+ITEMS PURCHASED:
+
+Laptop Computer Pro 15"
+SKU: 789456123000
+1 @ $1,299.99                    $1,299.99
+
+Wireless Mouse - Black
+SKU: 123789456000  
+1 @ $39.99                       $39.99
+
+USB-C Hub Adapter
+SKU: 456123789000
+1 @ $59.99                       $59.99
+
+Laptop Sleeve 15"
+SKU: 321654987000
+1 @ $29.99                       $29.99
+
+Extended Warranty (2 yr)
+SKU: 999888777000
+1 @ $149.99                      $149.99
+                                 ----------
+Subtotal:                        $1,579.95
+Sales Tax (8.25%):               $130.35
+                                 ----------
+TOTAL:                           $1,710.30
+
+PAYMENT METHOD:
+Visa ************1234            $1,710.30
+Approval Code: 054782
+Chip Read
+
+CUSTOMER SAVINGS:
+Member Discount (5%):            $78.99
+Manufacturer Rebate:             $50.00
+Total Savings:                   $128.99
+
+RETURN POLICY:
+- 30 days with receipt
+- Electronics: 15 days
+- Extended warranty info at Customer Service
+
+REWARDS PROGRAM:
+Member ID: TM-456789123
+Points Earned: 1,710
+Total Points: 8,435
+
+Visit www.techmart.com/survey
+Enter code: 458-98745
+for a chance to win $500!
+
+Thank you for shopping at TechMart!
+
+********************************
+IMPORTANT: Register your laptop at
+www.manufacturer.com/register
+for warranty activation
+********************************

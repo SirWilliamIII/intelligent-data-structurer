@@ -15,6 +15,7 @@ from collections import Counter, defaultdict
 import sqlite3
 from pathlib import Path
 from .classifier import IntelligentClassifier, ContentType
+from .business_classifier import BusinessDocumentClassifier, BusinessClassificationResult
 
 @dataclass
 class ContentSignature:
@@ -304,6 +305,7 @@ class IntelligentAnalyzer:
         self._load_models()
         self.learning_system = ContentLearningSystem()
         self.classifier = IntelligentClassifier()
+        self.business_classifier = BusinessDocumentClassifier()
         
         # Dynamic table naming strategies
         self.naming_strategies = {
@@ -347,8 +349,14 @@ class IntelligentAnalyzer:
         # Create content signature
         signature = self.learning_system.analyze_content_signature(content, entities)
         
-        # Use classifier to get proper content type
-        classification_result = await self.classifier.classify_content(content, filename)
+        # Use business classifier first, then fallback to general classifier
+        business_result = await self.business_classifier.classify_business_document(content, filename)
+        
+        # If business classification is confident, use it; otherwise use general classifier
+        if business_result.confidence > 0.5:
+            classification_result = None  # Use business result directly
+        else:
+            classification_result = await self.classifier.classify_content(content, filename)
         
         # Find similar content and check for duplicates
         similar_content = self.learning_system.find_similar_content(signature)
@@ -360,14 +368,20 @@ class IntelligentAnalyzer:
         
         # Determine table name intelligently (enhanced with classification)
         table_name, confidence, reasoning = self._determine_intelligent_table(
-            signature, similar_content, content, filename, classification_result
+            signature, similar_content, content, filename, classification_result, business_result
         )
         
         # Extract comprehensive data
-        extracted_data = self._extract_intelligent_data(content, entities, signature, filename, classification_result)
+        extracted_data = self._extract_intelligent_data(content, entities, signature, filename, classification_result, business_result)
         
         # Add content_type and domain fields that are missing
-        if classification_result:
+        if business_result.confidence > 0.5:
+            extracted_data['content_type'] = business_result.business_type.value if business_result.business_type else 'unknown'
+            extracted_data['classification_confidence'] = business_result.confidence
+            extracted_data['classification_reasoning'] = business_result.reasoning
+            extracted_data['business_category'] = business_result.category
+            extracted_data['business_metadata'] = business_result.metadata
+        elif classification_result:
             extracted_data['content_type'] = classification_result.content_type.value
             extracted_data['classification_confidence'] = classification_result.confidence
             extracted_data['classification_reasoning'] = classification_result.reasoning
@@ -396,12 +410,20 @@ class IntelligentAnalyzer:
         )
     
     def _determine_intelligent_table(self, signature: ContentSignature, similar_content: List[Tuple[str, float]], 
-                                   content: str, filename: str, classification_result=None) -> Tuple[str, float, str]:
+                                   content: str, filename: str, classification_result=None, business_result=None) -> Tuple[str, float, str]:
         """Intelligently determine table name using learning and similarity."""
         
         reasoning_parts = []
         
-        # If we have very similar content, use the same table (highest priority)
+        # If we have confident business classification, use it (highest priority)
+        if business_result and business_result.confidence > 0.5:
+            table_name = business_result.suggested_collection
+            confidence = business_result.confidence
+            reasoning_parts.append(f"Business document type: {business_result.business_type.value if business_result.business_type else 'unknown'}")
+            reasoning_parts.append(f"Category: {business_result.category}")
+            return table_name, confidence, "; ".join(reasoning_parts)
+        
+        # If we have very similar content, use the same table (second priority)
         if similar_content and similar_content[0][1] > 0.7:
             # Get table name from most similar content
             conn = sqlite3.connect(self.learning_system.learning_db_path)
@@ -527,7 +549,7 @@ class IntelligentAnalyzer:
         return min(confidence, 1.0)
     
     def _extract_intelligent_data(self, content: str, entities: List[Dict], 
-                                signature: ContentSignature, filename: str, classification_result=None) -> Dict[str, Any]:
+                                signature: ContentSignature, filename: str, classification_result=None, business_result=None) -> Dict[str, Any]:
         """Extract data with intelligence about content type."""
         
         # Base extraction

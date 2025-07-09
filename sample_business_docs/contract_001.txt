@@ -1,0 +1,72 @@
+SOFTWARE DEVELOPMENT AGREEMENT
+
+This Agreement is entered into as of February 15, 2024 ("Effective Date")
+
+BETWEEN:
+TechInnovate Solutions LLC ("Developer")
+A Delaware Limited Liability Company
+123 Innovation Parkway
+San Jose, CA 95110
+
+AND:
+Global Retail Corporation ("Client")
+A New York Corporation
+456 Commerce Avenue
+New York, NY 10016
+
+WHEREAS, Client desires to engage Developer to design, develop, and deliver custom software solutions;
+WHEREAS, Developer has the expertise and resources to provide such services;
+
+NOW, THEREFORE, in consideration of the mutual covenants and agreements herein contained, the parties agree as follows:
+
+1. SCOPE OF WORK
+Developer shall provide the following services:
+a) Custom e-commerce platform development
+b) Mobile application for iOS and Android
+c) Integration with existing inventory management systems
+d) Training and documentation
+e) 6 months post-launch support
+
+2. DELIVERABLES AND TIMELINE
+Phase 1: Requirements Analysis and Design (4 weeks)
+Phase 2: Backend Development (8 weeks)
+Phase 3: Frontend Development (6 weeks)
+Phase 4: Testing and QA (4 weeks)
+Phase 5: Deployment and Training (2 weeks)
+Total Project Duration: 24 weeks from Effective Date
+
+3. COMPENSATION
+Total Project Fee: $375,000
+Payment Schedule:
+- Upon signing: $75,000 (20%)
+- Phase 1 completion: $75,000 (20%)
+- Phase 3 completion: $112,500 (30%)
+- Final delivery: $112,500 (30%)
+
+4. INTELLECTUAL PROPERTY
+Upon final payment, all deliverables, source code, and documentation shall become the exclusive property of Client.
+
+5. CONFIDENTIALITY
+Both parties agree to maintain strict confidentiality regarding proprietary information disclosed during this engagement.
+
+6. WARRANTIES
+Developer warrants that all deliverables will be free from material defects for a period of 90 days following acceptance.
+
+7. LIMITATION OF LIABILITY
+Neither party shall be liable for indirect, incidental, or consequential damages exceeding the total contract value.
+
+8. TERMINATION
+Either party may terminate this agreement with 30 days written notice. Client shall pay for all work completed to date.
+
+9. GOVERNING LAW
+This Agreement shall be governed by the laws of the State of Delaware.
+
+IN WITNESS WHEREOF, the parties have executed this Agreement as of the date first written above.
+
+DEVELOPER:                          CLIENT:
+TechInnovate Solutions LLC          Global Retail Corporation
+
+_________________________          _________________________
+Jonathan Smith                      Margaret Thompson
+CEO                                VP of Technology
+Date: ________________             Date: ________________

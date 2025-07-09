@@ -1,0 +1,73 @@
+JOB POSTING
+
+Position: Senior Data Scientist
+Company: Analytics Pro Solutions
+Location: San Francisco, CA (Hybrid Remote)
+Department: Data Science & Analytics
+Reports to: VP of Data Science
+Posted Date: February 26, 2024
+Job ID: APS-2024-DS-015
+
+ABOUT US:
+Analytics Pro Solutions is a leading provider of advanced analytics and machine learning solutions for Fortune 500 companies. We're passionate about transforming data into actionable insights that drive business success. Join our team of 200+ data professionals in a fast-paced, innovative environment.
+
+POSITION SUMMARY:
+We're seeking an experienced Senior Data Scientist to lead cutting-edge machine learning projects for our enterprise clients. You'll work with massive datasets, develop predictive models, and collaborate with cross-functional teams to deliver solutions that impact millions of users.
+
+KEY RESPONSIBILITIES:
+• Design and implement machine learning models for customer churn prediction, recommendation systems, and fraud detection
+• Lead end-to-end data science projects from problem definition to production deployment
+• Collaborate with engineering teams to build scalable ML pipelines
+• Mentor junior data scientists and contribute to best practices
+• Present findings and recommendations to executive stakeholders
+• Research and implement state-of-the-art ML techniques
+• Contribute to our technical blog and represent us at conferences
+
+REQUIRED QUALIFICATIONS:
+• Master's or PhD in Computer Science, Statistics, Mathematics, or related field
+• 5+ years of hands-on experience in data science/machine learning roles
+• Expert proficiency in Python and SQL
+• Deep knowledge of ML frameworks (TensorFlow, PyTorch, Scikit-learn)
+• Experience with cloud platforms (AWS, GCP, or Azure)
+• Strong understanding of statistics and experimental design
+• Excellent communication skills with ability to explain complex concepts
+• Track record of deploying ML models to production
+
+PREFERRED QUALIFICATIONS:
+• Experience with deep learning and NLP
+• Knowledge of distributed computing (Spark, Dask)
+• Publications in peer-reviewed journals or conferences
+• Experience in financial services or e-commerce domains
+• Familiarity with MLOps practices and tools
+
+TECHNICAL STACK:
+Python, R, SQL, TensorFlow, PyTorch, Spark, Airflow, Docker, Kubernetes, AWS SageMaker, Tableau, Git
+
+WHAT WE OFFER:
+• Competitive salary range: $180,000 - $220,000
+• Annual bonus up to 25% of base salary
+• Equity compensation
+• Comprehensive health, dental, and vision insurance
+• $5,000 annual professional development budget
+• Flexible work arrangements (3 days office, 2 days remote)
+• Unlimited PTO policy
+• 401(k) with 6% company match
+• State-of-the-art hardware and software
+• Relocation assistance available
+
+OUR VALUES:
+Innovation • Collaboration • Integrity • Excellence • Diversity
+
+INTERVIEW PROCESS:
+1. Initial phone screen (30 min)
+2. Technical assessment (take-home)
+3. Virtual technical interview (90 min)
+4. On-site interviews (4 hours)
+5. Final culture fit interview
+
+Analytics Pro Solutions is an Equal Opportunity Employer committed to building a diverse and inclusive team.
+
+TO APPLY:
+Submit your resume and a cover letter explaining your interest in this role to careers@analyticspro.com with subject line "Senior Data Scientist - Job ID: APS-2024-DS-015"
+
+Application Deadline: March 31, 2024

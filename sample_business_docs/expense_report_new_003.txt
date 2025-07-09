@@ -1,0 +1,41 @@
+EXPENSE REPORT
+
+Employee Information:
+Name: Jennifer Liu
+Employee ID: EMP-9876
+Department: Engineering
+Manager: David Chang
+Report Period: March 15-25, 2024
+Report Date: March 26, 2024
+
+Business Purpose: Developer conference and team building in Austin
+
+Expense Details:
+Date        Category          Description                           Amount
+---------------------------------------------------------------------------
+03/15/2024  Transportation   Taxi to airport                       $35.00
+03/15/2024  Airfare         Flight SFO-AUS (Southwest 1234)       $298.00
+03/15/2024  Transportation   Rideshare from airport                $28.00
+03/15/2024  Hotel           Hilton Austin (3 nights)              $567.00
+03/16/2024  Meals           Breakfast                              $15.00
+03/16/2024  Meals           Conference lunch                       $45.00
+03/16/2024  Meals           Team dinner                            $89.00
+03/17/2024  Transportation   Uber to venue                         $12.00
+03/17/2024  Meals           Working lunch                          $52.00
+03/17/2024  Entertainment   Team building activity                 $125.00
+03/18/2024  Transportation   Taxi to airport                       $30.00
+03/18/2024  Airfare         Flight AUS-SFO (Southwest 5678)       $324.00
+
+                                           Subtotal:        $1,620.00
+                                           Cash Advance:    ($200.00)
+                                           TOTAL DUE:       $1,420.00
+
+Receipts Attached: Yes [12 receipts]
+
+Notes:
+- Conference provided valuable technical insights
+- Team building improved cross-functional collaboration
+- All expenses pre-approved by manager
+
+Employee Signature: Jennifer Liu           Date: 03/26/2024
+Approved By: David Chang                   Date: 03/27/2024

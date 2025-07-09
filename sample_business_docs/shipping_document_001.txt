@@ -1,0 +1,89 @@
+BILL OF LADING / SHIPPING DOCUMENT
+
+Carrier: FastFreight Logistics
+PRO Number: FFL-2024-567890
+Date: February 28, 2024
+
+SHIPPER (FROM):
+Global Manufacturing Inc.
+5000 Industrial Way
+Houston, TX 77001
+Contact: Mike Thompson
+Phone: (713) 555-4321
+
+CONSIGNEE (TO):
+Pacific Retail Distribution
+8900 Commerce Center Drive
+Los Angeles, CA 90040
+Contact: Lisa Chen
+Phone: (323) 555-8765
+
+THIRD PARTY BILLING:
+Logistics Solutions LLC
+Account #: LS-789456
+
+SHIPMENT INFORMATION:
+Pickup Date: 02/28/2024
+Delivery Date: 03/04/2024 (Estimated)
+Service Type: Standard Ground
+Special Instructions: Lift gate required at delivery
+
+COMMODITY DESCRIPTION:
+Line  Pieces  Type    Weight   Class  Description
+-------------------------------------------------
+1     10      Pallets 4,500    85     Electronic Components
+2     5       Crates  2,200    70     Industrial Motors  
+3     25      Boxes   1,800    55     Packaging Materials
+4     2       Pallets 3,000    92.5   Machinery Parts
+
+Total Pieces: 42
+Total Weight: 11,500 lbs
+
+DIMENSIONS:
+Pallet 1-10: 48"x40"x48" each
+Crates 1-5: 60"x48"x36" each
+Boxes 1-25: 24"x18"x18" each
+Pallet 11-12: 48"x48"x60" each
+
+DECLARED VALUE: $125,000
+Insurance: Yes [X] No [ ]
+
+FREIGHT CHARGES:
+Base Rate:                       $1,850.00
+Fuel Surcharge (12%):           $222.00
+Insurance ($0.70/100):          $875.00
+Lift Gate Service:              $150.00
+Inside Delivery:                $0.00
+Residential Delivery:           $0.00
+                               -----------
+Total Charges:                  $3,097.00
+
+Terms: Prepaid [X] Collect [ ] 3rd Party [X]
+
+HAZMAT: No hazardous materials included
+
+CARRIER INFORMATION:
+Driver Name: ________________
+Tractor #: __________________
+Trailer #: __________________
+
+SHIPPER CERTIFICATION:
+This is to certify that the above named materials are properly classified, packaged, marked and labeled, and are in proper condition for transportation according to the applicable regulations of the Department of Transportation.
+
+Shipper Signature: _________________ Date: _______
+Print Name: Mike Thompson
+
+CARRIER ACKNOWLEDGMENT:
+Carrier acknowledges receipt of packages and required placards. Carrier certifies emergency response information was made available and/or carrier has the DOT emergency response guidebook.
+
+Driver Signature: _________________ Date: _______
+
+DELIVERY RECEIPT:
+Received in good condition except as noted:
+_________________________________________________
+
+Consignee Signature: _________________ Date: _______
+Print Name: _______________________
+Time: _______
+
+NOTE: File claim for loss or damage within 9 months

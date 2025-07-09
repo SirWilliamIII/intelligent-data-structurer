@@ -1,0 +1,46 @@
+EXPENSE REPORT
+
+Employee Information:
+Name: David Martinez
+Employee ID: EMP-4582
+Department: Sales
+Manager: Patricia Chen
+Report Period: January 15-31, 2024
+Report Date: February 2, 2024
+
+Business Purpose: Client meetings and Q1 sales conference in Las Vegas
+
+Expense Details:
+Date        Category          Description                           Amount
+---------------------------------------------------------------------------
+01/15/2024  Transportation   Uber to airport                       $45.00
+01/15/2024  Airfare         Flight NYC-LAS (Delta 1245)           $487.00
+01/15/2024  Transportation   Taxi from LAS airport                 $28.50
+01/15/2024  Hotel           Marriott Las Vegas (3 nights)         $597.00
+01/16/2024  Meals           Breakfast - conference                 $18.50
+01/16/2024  Meals           Lunch with client (TechVision Inc)    $127.80
+01/16/2024  Meals           Dinner - team meeting                  $65.00
+01/17/2024  Transportation   Uber to client office                  $22.00
+01/17/2024  Meals           Breakfast                              $16.75
+01/17/2024  Entertainment    Client dinner (4 people)              $342.00
+01/18/2024  Transportation   Taxi to airport                        $31.00
+01/18/2024  Airfare         Flight LAS-NYC (Delta 892)            $521.00
+01/18/2024  Transportation   Uber from JFK                          $52.00
+01/22/2024  Mileage         Client visits (125 miles @ $0.65)     $81.25
+01/25/2024  Office Supplies  Presentation materials                 $67.50
+01/28/2024  Meals           Lunch meeting with prospect            $89.00
+
+                                           Subtotal:        $2,591.30
+                                           Cash Advance:    ($500.00)
+                                           TOTAL DUE:       $2,091.30
+
+Receipts Attached: Yes [15 receipts]
+
+Notes:
+- Client dinner on 01/17 resulted in signed contract worth $85,000
+- All meals within company policy limits
+- Hotel rate negotiated below company maximum
+
+Employee Signature: David Martinez          Date: 02/02/2024
+Approved By: Patricia Chen                  Date: 02/05/2024
+Finance Approval: _______________           Date: ___________

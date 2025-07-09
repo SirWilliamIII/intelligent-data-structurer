@@ -1,0 +1,83 @@
+WORK ORDER
+
+Work Order #: WO-2024-0523
+Date Created: February 21, 2024
+Priority: HIGH
+Due Date: February 24, 2024
+
+Customer Information:
+Company: Pacific Plaza Office Complex
+Contact: Sandra Williams
+Phone: (310) 555-7890
+Email: s.williams@pacificplaza.com
+Service Address: 1000 Pacific Boulevard, Suite 500, Los Angeles, CA 90025
+
+Service Details:
+Type of Service: HVAC System Repair
+Equipment: Carrier 50HC Rooftop Unit
+Model #: 50HC-060
+Serial #: 4523KL8976
+Location: Building A, Rooftop
+
+Problem Description:
+- Unit not cooling properly
+- Unusual noise during operation
+- Temperature fluctuations reported on floors 4-6
+- Last service date: 10/15/2023
+
+Work to be Performed:
+1. Diagnose cooling system malfunction
+2. Check refrigerant levels and test for leaks
+3. Inspect and clean condenser coils
+4. Test compressor operation
+5. Check and calibrate thermostat
+6. Replace air filters
+7. Perform full system diagnostic
+8. Provide repair recommendations
+
+Materials Required:
+- R-410A Refrigerant (est. 5 lbs)
+- 24x24x2 Filters (quantity: 4)
+- Coil cleaner solution
+- Electrical contactors (if needed)
+- Miscellaneous parts as required
+
+Assigned Technician: Robert Jackson (Tech ID: TEC-45)
+Scheduled Date: February 23, 2024
+Scheduled Time: 8:00 AM - 12:00 PM
+
+Labor Estimate: 4 hours @ $125/hour = $500
+Parts Estimate: $350-750 (pending diagnosis)
+Total Estimate: $850-1,250
+
+Special Instructions:
+- Contact building security upon arrival
+- Service elevator access code: 4521
+- Customer requests minimal disruption to tenants
+- Previous repair notes indicate intermittent compressor issues
+
+Authorization:
+Customer Signature: _________________ Date: _________
+Technician Signature: _______________ Date: _________
+
+Service Completed:
+Date: _______________
+Time In: _____ Time Out: _____
+Total Hours: _____
+
+Work Performed:
+_________________________________________________
+_________________________________________________
+_________________________________________________
+
+Parts Used:
+_________________________________________________
+_________________________________________________
+
+Follow-up Required: Yes [ ] No [ ]
+Next Service Date: _______________
+
+Customer Satisfaction:
+Excellent [ ] Good [ ] Fair [ ] Poor [ ]
+
+Final Invoice Amount: $______________

@@ -1,0 +1,42 @@
+PURCHASE ORDER
+
+Purchase Order Number: PO-2024-3847
+Date: January 28, 2024
+Delivery Date Required: February 15, 2024
+
+Vendor:
+Office Supplies Direct
+2100 Distribution Way
+Dallas, TX 75201
+Phone: (214) 555-3421
+Contact: Mary Johnson
+
+Ship To:
+Innovative Marketing Agency
+500 Creative Boulevard, Suite 300
+Austin, TX 78701
+Attn: Receiving Department
+
+Billing Address:
+Same as shipping address
+
+Item #    Description                      Quantity    Unit Price    Total
+---------------------------------------------------------------------------
+OS-1001   Ergonomic Office Chairs         25          $289.99       $7,249.75
+OS-2150   Height Adjustable Desks         25          $649.00       $16,225.00
+OS-3022   Monitor Arms (Dual)             25          $119.99       $2,999.75
+OS-4001   Wireless Keyboards              30          $59.99        $1,799.70
+OS-4002   Wireless Mice                   30          $39.99        $1,199.70
+OS-5100   Desk Organizer Sets            25          $24.99        $624.75
+OS-6200   Filing Cabinets (4-drawer)     10          $299.00       $2,990.00
+
+                                          Subtotal:                  $33,088.65
+                                          Shipping:                  $500.00
+                                          Tax (8.25%):              $2,730.31
+                                          TOTAL:                    $36,318.96
+
+Payment Terms: Net 45
+Please reference PO number on all correspondence and invoices.
+
+Authorized By: James Wilson, Procurement Manager
+Date: 01/28/2024

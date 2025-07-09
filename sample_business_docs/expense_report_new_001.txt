@@ -1,0 +1,41 @@
+EXPENSE REPORT
+
+Employee Information:
+Name: Sarah Johnson
+Employee ID: EMP-7891
+Department: Marketing
+Manager: Michael Chen
+Report Period: March 1-15, 2024
+Report Date: March 18, 2024
+
+Business Purpose: Marketing conference and client presentations in Chicago
+
+Expense Details:
+Date        Category          Description                           Amount
+---------------------------------------------------------------------------
+03/01/2024  Transportation   Uber to airport                       $42.50
+03/01/2024  Airfare         Flight JFK-CHI (American 334)         $389.00
+03/01/2024  Transportation   Taxi from ORD airport                 $35.00
+03/01/2024  Hotel           Hyatt Chicago (2 nights)              $458.00
+03/02/2024  Meals           Breakfast - conference                 $22.00
+03/02/2024  Meals           Lunch with prospects                   $156.80
+03/02/2024  Meals           Dinner - networking event             $89.00
+03/03/2024  Transportation   Uber to client office                 $18.00
+03/03/2024  Meals           Client breakfast meeting              $67.50
+03/03/2024  Office Supplies  Presentation materials               $45.00
+03/03/2024  Transportation   Taxi to airport                       $28.00
+03/03/2024  Airfare         Flight CHI-JFK (American 892)         $412.00
+
+                                           Subtotal:        $1,763.80
+                                           Cash Advance:    ($300.00)
+                                           TOTAL DUE:       $1,463.80
+
+Receipts Attached: Yes [12 receipts]
+
+Notes:
+- Conference led to 3 new qualified leads
+- Client breakfast resulted in $50,000 contract renewal
+- All expenses within company policy limits
+
+Employee Signature: Sarah Johnson          Date: 03/18/2024
+Approved By: Michael Chen                  Date: 03/19/2024
