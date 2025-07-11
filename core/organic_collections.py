@@ -112,7 +112,10 @@ class OrganicCollectionManager:
         # Stage 3: Evolve existing collections
         await self._evolve_collections()
         
-        # Stage 4: Health check on collections
+        # Stage 4: Monitor mature collections for subdivision opportunities
+        await self._monitor_collection_subdivision()
+        
+        # Stage 5: Health check on collections
         await self._health_check_collections()
         
         return doc_id
@@ -169,7 +172,7 @@ class OrganicCollectionManager:
         await self._evaluate_existing_collections(doc_id, document_data)
     
     async def _find_similar_staged_documents(self, document_data: Dict[str, Any]) -> List[str]:
-        """Find similar documents in the staging area using advanced similarity."""
+        """Find similar documents in the staging area using semantic signature similarity."""
         
         # Get all staged documents
         staged_docs = list(self.staging_collection.find({"collection_assigned": None}))
@@ -177,37 +180,123 @@ class OrganicCollectionManager:
         if len(staged_docs) < 2:
             return []
         
-        # Extract content for similarity analysis
+        # Get target document's semantic signature
+        target_signature = document_data.get('semantic_signature', {})
+        target_keywords = set(target_signature.get('domain_keywords', []))
+        target_patterns = set(target_signature.get('structural_patterns', []))
+        target_markers = set(target_signature.get('content_markers', []))
+        
+        if not target_keywords and not target_patterns:
+            logger.warning("Target document has no semantic signature - falling back to content similarity")
+            return await self._fallback_content_similarity(document_data, staged_docs)
+        
+        similar_docs = []
+        
+        for doc in staged_docs:
+            doc_signature = doc.get('semantic_signature', {})
+            doc_keywords = set(doc_signature.get('domain_keywords', []))
+            doc_patterns = set(doc_signature.get('structural_patterns', []))
+            doc_markers = set(doc_signature.get('content_markers', []))
+            
+            # Calculate semantic similarity using Jaccard similarity
+            keyword_similarity = self._jaccard_similarity(target_keywords, doc_keywords)
+            pattern_similarity = self._jaccard_similarity(target_patterns, doc_patterns)
+            marker_similarity = self._jaccard_similarity(target_markers, doc_markers)
+            
+            # Weighted similarity score (keywords are most important)
+            similarity_score = (
+                keyword_similarity * 0.6 +
+                pattern_similarity * 0.3 +
+                marker_similarity * 0.1
+            )
+            
+            # Check for domain-specific high-value keywords
+            domain_boost = self._calculate_domain_boost(target_keywords, doc_keywords)
+            similarity_score += domain_boost
+            
+            logger.debug(f"Semantic similarity: {similarity_score:.3f} "
+                        f"(kw:{keyword_similarity:.3f}, pat:{pattern_similarity:.3f}, "
+                        f"mark:{marker_similarity:.3f}, boost:{domain_boost:.3f})")
+            
+            # Use higher threshold for semantic similarity (more accurate)
+            if similarity_score > 0.7:  # Raised from 0.5 for accuracy
+                similar_docs.append(str(doc['_id']))
+                logger.info(f"Found semantically similar document: {doc.get('source_file', 'unknown')} "
+                           f"(similarity: {similarity_score:.3f})")
+        
+        return similar_docs
+    
+    def _jaccard_similarity(self, set1: set, set2: set) -> float:
+        """Calculate Jaccard similarity between two sets."""
+        if not set1 and not set2:
+            return 1.0
+        if not set1 or not set2:
+            return 0.0
+        
+        intersection = len(set1 & set2)
+        union = len(set1 | set2)
+        return intersection / union if union > 0 else 0.0
+    
+    def _calculate_domain_boost(self, target_keywords: set, doc_keywords: set) -> float:
+        """Calculate additional similarity boost for domain-specific keyword matches."""
+        
+        # High-value domain keywords that strongly indicate similarity
+        domain_clusters = {
+            'sports': {'nfl', 'mlb', 'football', 'baseball', 'team', 'league', 'sports', 'game'},
+            'medical': {'medical', 'patient', 'doctor', 'hospital', 'diagnosis', 'treatment'},
+            'technical': {'kubernetes', 'docker', 'git', 'api', 'software', 'code', 'system'},
+            'financial': {'expense', 'invoice', 'payment', 'financial', 'cost', 'budget'},
+            'business': {'meeting', 'employee', 'contract', 'business', 'company', 'organization'}
+        }
+        
+        boost = 0.0
+        
+        for domain, domain_keywords in domain_clusters.items():
+            target_domain_match = len(target_keywords & domain_keywords)
+            doc_domain_match = len(doc_keywords & domain_keywords)
+            
+            # Both documents have keywords from the same domain
+            if target_domain_match >= 2 and doc_domain_match >= 2:
+                # Strong domain match - significant boost
+                shared_domain_keywords = len((target_keywords & domain_keywords) & (doc_keywords & domain_keywords))
+                if shared_domain_keywords >= 2:
+                    boost += 0.3
+                    logger.debug(f"Strong {domain} domain match: +0.3 boost")
+                elif shared_domain_keywords >= 1:
+                    boost += 0.15
+                    logger.debug(f"Moderate {domain} domain match: +0.15 boost")
+        
+        return min(boost, 0.4)  # Cap boost at 0.4
+    
+    async def _fallback_content_similarity(self, document_data: Dict[str, Any], staged_docs: List[Dict]) -> List[str]:
+        """Fallback to content similarity when semantic signatures are unavailable."""
+        
         contents = []
         doc_ids = []
         
         for doc in staged_docs:
             content = doc.get('content', '')
-            if len(content) > 50:  # Only consider substantial content
+            if len(content) > 50:
                 contents.append(content)
                 doc_ids.append(str(doc['_id']))
         
         if len(contents) < 2:
             return []
         
-        # Calculate TF-IDF similarity
         try:
             tfidf_matrix = self.vectorizer.fit_transform(contents)
-            similarity_matrix = cosine_similarity(tfidf_matrix)
-            
-            # Find the index of our target document
             target_content = document_data.get('content', '')
             target_tfidf = self.vectorizer.transform([target_content])
             similarities = cosine_similarity(target_tfidf, tfidf_matrix)[0]
             
-            # Find similar documents
-            similar_indices = np.where(similarities > self.similarity_threshold)[0]
+            # Use higher threshold for content similarity too
+            similar_indices = np.where(similarities > 0.8)[0]  # Raised from 0.5
             similar_doc_ids = [doc_ids[i] for i in similar_indices]
             
             return similar_doc_ids
             
         except Exception as e:
-            logger.warning(f"TF-IDF similarity calculation failed: {e}")
+            logger.warning(f"Content similarity calculation failed: {e}")
             return []
     
     async def _find_existing_seed(self, similar_docs: List[str]) -> Optional[Dict]:
@@ -709,6 +798,16 @@ class OrganicCollectionManager:
         docs = list(collection.find())
         
         if not docs:
+            # Create empty DNA for collections with no documents yet
+            dna = CollectionDNA(
+                core_themes=set(),
+                structural_patterns=set(),
+                content_markers=set(),
+                quality_indicators={},
+                evolution_history=[],
+                compatibility_map={}
+            )
+            self.collection_dna[collection_name] = dna
             return
         
         # Extract themes
@@ -906,3 +1005,274 @@ class OrganicCollectionManager:
                 return value
         
         return {key: clean_value(value) for key, value in data.items()}
+    
+    async def _monitor_collection_subdivision(self):
+        """Monitor mature collections for subdivision opportunities."""
+        
+        # Get all mature collections that might be candidates for subdivision
+        mature_collections = list(self.collection_registry.find({
+            "status": "mature",
+            "document_count": {"$gte": self.staging_threshold}  # Has enough docs to subdivide
+        }))
+        
+        for collection_info in mature_collections:
+            collection_name = collection_info['collection_name']
+            
+            # Skip if we recently checked this collection
+            if await self._recently_checked_for_subdivision(collection_name):
+                continue
+            
+            logger.info(f"🔍 Analyzing '{collection_name}' for subdivision opportunities...")
+            
+            # Analyze the collection for subdivision patterns
+            subdivision_opportunities = await self._analyze_collection_for_subdivision(collection_name)
+            
+            if subdivision_opportunities:
+                logger.info(f"📊 Found {len(subdivision_opportunities)} subdivision opportunities in '{collection_name}'")
+                
+                for opportunity in subdivision_opportunities:
+                    await self._create_subdivision(collection_name, opportunity)
+            
+            # Record that we checked this collection
+            await self._record_subdivision_check(collection_name)
+    
+    async def _recently_checked_for_subdivision(self, collection_name: str) -> bool:
+        """Check if we recently analyzed this collection for subdivision."""
+        from datetime import datetime, timedelta
+        
+        # Check if there's a recent subdivision check record
+        recent_check = self.collection_registry.find_one({
+            "collection_name": collection_name,
+            "last_subdivision_check": {"$gte": datetime.utcnow() - timedelta(hours=1)}
+        })
+        
+        return recent_check is not None
+    
+    async def _analyze_collection_for_subdivision(self, collection_name: str) -> List[Dict]:
+        """Analyze a mature collection to find subdivision patterns."""
+        
+        collection = self.db[collection_name]
+        documents = list(collection.find())
+        
+        if len(documents) < self.staging_threshold:
+            return []
+        
+        subdivision_opportunities = []
+        
+        # Group documents by semantic sub-patterns
+        subclusters = await self._find_semantic_subclusters(documents)
+        
+        for subcluster in subclusters:
+            if len(subcluster['documents']) >= self.min_seed_size:
+                
+                # Generate subdivision name based on distinctive keywords
+                subdivision_name = self._generate_subdivision_name(
+                    parent_name=collection_name,
+                    distinctive_keywords=subcluster['distinctive_keywords']
+                )
+                
+                subdivision_opportunities.append({
+                    'subdivision_name': subdivision_name,
+                    'documents': subcluster['documents'],
+                    'distinctive_keywords': subcluster['distinctive_keywords'],
+                    'confidence': subcluster['confidence'],
+                    'pattern_type': subcluster['pattern_type']
+                })
+        
+        # Filter for high-confidence subdivisions
+        high_confidence_subdivisions = [
+            opp for opp in subdivision_opportunities 
+            if opp['confidence'] > 0.7
+        ]
+        
+        return high_confidence_subdivisions
+    
+    async def _find_semantic_subclusters(self, documents: List[Dict]) -> List[Dict]:
+        """Find semantic subclusters within a collection."""
+        
+        subclusters = []
+        
+        # Group by distinctive semantic patterns
+        keyword_groups = defaultdict(list)
+        
+        for doc in documents:
+            semantic_sig = doc.get('semantic_signature', {})
+            domain_keywords = semantic_sig.get('domain_keywords', [])
+            
+            # Find distinctive keywords (appear in some docs but not all)
+            for keyword in domain_keywords:
+                keyword_groups[keyword].append(doc)
+        
+        # Find keywords that define meaningful subgroups
+        total_docs = len(documents)
+        
+        for keyword, docs_with_keyword in keyword_groups.items():
+            keyword_frequency = len(docs_with_keyword) / total_docs
+            
+            # Look for keywords that split the collection meaningfully
+            # (appear in 20-80% of documents - not too rare, not too common)
+            if 0.2 <= keyword_frequency <= 0.8 and len(docs_with_keyword) >= self.min_seed_size:
+                
+                # Calculate how distinctive this keyword is
+                distinctive_score = self._calculate_distinctiveness(keyword, docs_with_keyword, documents)
+                
+                if distinctive_score > 0.6:
+                    subclusters.append({
+                        'documents': docs_with_keyword,
+                        'distinctive_keywords': [keyword],
+                        'confidence': distinctive_score,
+                        'pattern_type': 'semantic_specialization'
+                    })
+        
+        # Also look for multi-keyword patterns (e.g., 'nfl' + 'team' vs 'mlb' + 'team')
+        subclusters.extend(await self._find_multi_keyword_subclusters(documents))
+        
+        return subclusters
+    
+    async def _find_multi_keyword_subclusters(self, documents: List[Dict]) -> List[Dict]:
+        """Find subclusters based on combinations of keywords."""
+        
+        multiclusters = []
+        
+        # Extract all keyword combinations from documents
+        keyword_combinations = defaultdict(list)
+        
+        for doc in documents:
+            semantic_sig = doc.get('semantic_signature', {})
+            domain_keywords = set(semantic_sig.get('domain_keywords', []))
+            
+            # Look for specific domain patterns
+            if 'nfl' in domain_keywords and 'football' in domain_keywords:
+                keyword_combinations['nfl_football'].append(doc)
+            elif 'mlb' in domain_keywords and 'baseball' in domain_keywords:
+                keyword_combinations['mlb_baseball'].append(doc)
+            elif 'medical' in domain_keywords and 'patient' in domain_keywords:
+                keyword_combinations['patient_medical'].append(doc)
+            elif 'expense' in domain_keywords and 'report' in domain_keywords:
+                keyword_combinations['expense_reports'].append(doc)
+        
+        # Create subclusters for meaningful combinations
+        for combo_key, combo_docs in keyword_combinations.items():
+            if len(combo_docs) >= self.min_seed_size:
+                
+                confidence = len(combo_docs) / len(documents)
+                if confidence >= 0.3:  # At least 30% of the collection
+                    
+                    multiclusters.append({
+                        'documents': combo_docs,
+                        'distinctive_keywords': combo_key.split('_'),
+                        'confidence': confidence,
+                        'pattern_type': 'domain_specialization'
+                    })
+        
+        return multiclusters
+    
+    def _calculate_distinctiveness(self, keyword: str, docs_with_keyword: List[Dict], all_docs: List[Dict]) -> float:
+        """Calculate how distinctive a keyword is for subdividing a collection."""
+        
+        # Base distinctiveness on frequency
+        frequency_score = len(docs_with_keyword) / len(all_docs)
+        
+        # Penalize keywords that are too common or too rare
+        if frequency_score < 0.2 or frequency_score > 0.8:
+            return 0.0
+        
+        # Boost distinctiveness for domain-specific keywords
+        domain_keywords = ['nfl', 'mlb', 'medical', 'patient', 'expense', 'technical', 'kubernetes']
+        if keyword in domain_keywords:
+            return min(frequency_score + 0.3, 1.0)
+        
+        return frequency_score
+    
+    def _generate_subdivision_name(self, parent_name: str, distinctive_keywords: List[str]) -> str:
+        """Generate a name for a subdivision collection."""
+        
+        # Extract the base category from parent name
+        base_parts = parent_name.split('_')
+        
+        if 'documents' in base_parts:
+            base_parts.remove('documents')
+        if 'collection' in base_parts:
+            base_parts.remove('collection')
+        
+        # Combine distinctive keywords with parent category
+        primary_keyword = distinctive_keywords[0] if distinctive_keywords else 'specialized'
+        
+        # Create hierarchical naming
+        if len(base_parts) > 0:
+            return f"{primary_keyword}_{base_parts[0]}_documents"
+        else:
+            return f"{primary_keyword}_documents"
+    
+    async def _create_subdivision(self, parent_collection: str, subdivision_info: Dict):
+        """Create a new subdivision collection from a parent collection."""
+        
+        subdivision_name = subdivision_info['subdivision_name']
+        documents_to_move = subdivision_info['documents']
+        
+        logger.info(f"🌿 Creating subdivision '{subdivision_name}' from '{parent_collection}' with {len(documents_to_move)} documents")
+        
+        # Create the new subdivision collection
+        subdivision_collection = self.db[subdivision_name]
+        
+        # Move documents to subdivision
+        for doc in documents_to_move:
+            # Add subdivision metadata
+            doc['parent_collection'] = parent_collection
+            doc['subdivision_created_at'] = datetime.utcnow()
+            doc['subdivision_reason'] = subdivision_info['pattern_type']
+            
+            # Remove the _id to let MongoDB generate a new one
+            doc_copy = doc.copy()
+            if '_id' in doc_copy:
+                del doc_copy['_id']
+            
+            # Insert into subdivision
+            subdivision_collection.insert_one(doc_copy)
+            
+            # Remove from parent (optional - could also mark as moved)
+            parent_coll = self.db[parent_collection]
+            parent_coll.delete_one({"_id": doc["_id"]})
+        
+        # Register the new subdivision
+        await self._register_subdivision(subdivision_name, parent_collection, subdivision_info)
+        
+        # Update parent collection count
+        await self._update_collection_count(parent_collection)
+        
+        logger.info(f"✅ Subdivision '{subdivision_name}' created successfully")
+    
+    async def _register_subdivision(self, subdivision_name: str, parent_name: str, subdivision_info: Dict):
+        """Register a new subdivision in the collection registry."""
+        
+        subdivision_entry = {
+            "collection_name": subdivision_name,
+            "parent_collection": parent_name,
+            "status": "mature",
+            "created_at": datetime.utcnow(),
+            "document_count": len(subdivision_info['documents']),
+            "theme_keywords": subdivision_info['distinctive_keywords'],
+            "birth_confidence": subdivision_info['confidence'],
+            "subdivision_type": subdivision_info['pattern_type']
+        }
+        
+        self.collection_registry.insert_one(subdivision_entry)
+    
+    async def _record_subdivision_check(self, collection_name: str):
+        """Record that we checked this collection for subdivisions."""
+        
+        self.collection_registry.update_one(
+            {"collection_name": collection_name},
+            {"$set": {"last_subdivision_check": datetime.utcnow()}}
+        )
+    
+    async def _update_collection_count(self, collection_name: str):
+        """Update the document count for a collection."""
+        
+        collection = self.db[collection_name]
+        new_count = collection.count_documents({})
+        
+        self.collection_registry.update_one(
+            {"collection_name": collection_name},
+            {"$set": {"document_count": new_count}}
+        )

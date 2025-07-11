@@ -16,6 +16,7 @@ import sqlite3
 from pathlib import Path
 from .classifier import IntelligentClassifier, ContentType
 from .business_classifier import BusinessDocumentClassifier, BusinessClassificationResult
+from .semantic_enrichment import semantic_enricher
 
 @dataclass
 class ContentSignature:
@@ -104,7 +105,7 @@ class ContentLearningSystem:
         conn.commit()
         conn.close()
     
-    def analyze_content_signature(self, content: str, entities: List[Dict]) -> ContentSignature:
+    async def analyze_content_signature(self, content: str, entities: List[Dict]) -> ContentSignature:
         """Create a semantic signature for content similarity matching using dynamic learning."""
         
         # Extract meaningful words (nouns, verbs, adjectives) dynamically
@@ -127,6 +128,24 @@ class ContentLearningSystem:
             # Only add entities that are clearly organizational or technical
             if entity['label'] in ['ORG', 'PRODUCT', 'TECHNOLOGY', 'NORP', 'EVENT']:
                 domain_keywords.add(entity['text'].lower())
+        
+        # ORGANIC SEMANTIC ENRICHMENT - Discover what entities have in common
+        entity_names = [entity['text'] for entity in entities if entity['label'] == 'ORG']
+        if len(entity_names) >= 2:
+            try:
+                enriched_keywords = await semantic_enricher.enrich_entities(
+                    entities=entity_names,
+                    content_context=content[:500]  # Provide context for better search
+                )
+                
+                # Add discovered domain keywords
+                for entity_name, keywords in enriched_keywords.items():
+                    domain_keywords.update(keywords)
+                    logger.info(f"Enriched '{entity_name}' with keywords: {keywords}")
+                    
+            except Exception as e:
+                logger.warning(f"Semantic enrichment failed: {e}")
+                # Continue with original keywords if enrichment fails
         
         # Detect structural patterns dynamically
         structural_patterns = set()
@@ -347,7 +366,7 @@ class IntelligentAnalyzer:
         ]
         
         # Create content signature
-        signature = self.learning_system.analyze_content_signature(content, entities)
+        signature = await self.learning_system.analyze_content_signature(content, entities)
         
         # Use business classifier first, then fallback to general classifier
         business_result = await self.business_classifier.classify_business_document(content, filename)
